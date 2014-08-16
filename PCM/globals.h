@@ -5,6 +5,8 @@
 
 
 #define HELLO AGAIN
+#define BYEBYE
+
 #define HELLO
 #define BYE
 
