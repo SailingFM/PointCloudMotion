@@ -3,7 +3,7 @@
 #include "basic_types.h"
 #include <QMutex>
 
-
+#define BYEBYE
 
 #define HELLO
 
