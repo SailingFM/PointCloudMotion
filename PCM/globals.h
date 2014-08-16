@@ -4,7 +4,7 @@
 #include <QMutex>
 
 
-
+#define HELLO AGAIN
 #define HELLO
 #define BYE
 
