@@ -4,12 +4,6 @@
 #include <QMutex>
 
 
-#define HELLO AGAIN
-#define BYEBYE
-
-#define HELLO
-#define BYE
-
 namespace Paint_Param
 {
 	extern ScalarType	g_point_size;
