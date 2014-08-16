@@ -4,6 +4,9 @@
 #include <QMutex>
 
 
+
+#define HELLO
+
 namespace Paint_Param
 {
 	extern ScalarType	g_point_size;
