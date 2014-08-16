@@ -72,6 +72,12 @@ typedef Eigen::Matrix<ScalarType, 10,            10>              Matrix1010;
 typedef Eigen::Matrix<ScalarType, 2,              3>              Matrix23;
 typedef Eigen::Matrix<ScalarType, 3, Eigen::Dynamic>			  Matrix3X;
 
+typedef Eigen::Matrix<ScalarType, 1,              Eigen::Dynamic> RowVectorX;
+typedef Eigen::Matrix<ScalarType, 1,              2>              RowVector2;
+typedef Eigen::Matrix<ScalarType, 1,              3>              RowVector3;
+typedef Eigen::Matrix<ScalarType, 1,              4>              RowVector4;
+typedef Eigen::Matrix<IndexType,  1,              2>              RowVector2i;
+
 typedef Eigen::Matrix<ScalarType, Eigen::Dynamic, 1> VecX;
 typedef Eigen::Matrix<ScalarType, 2,              1> Vec2;
 typedef Eigen::Matrix<ScalarType, 3,              1> Vec3;
