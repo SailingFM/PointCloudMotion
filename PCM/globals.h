@@ -6,6 +6,7 @@
 
 
 #define HELLO
+#define BYE
 
 namespace Paint_Param
 {
