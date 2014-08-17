@@ -31,13 +31,14 @@
    </widget>
    <widget class="QMenu" name="menuPaint">
     <property name="title">
-     <string>Paint</string>
+     <string>View</string>
     </property>
     <addaction name="actionSet_Visible"/>
     <addaction name="actionSet_Invisible"/>
     <addaction name="actionObject_Color"/>
     <addaction name="actionVertex_Color"/>
     <addaction name="actionLabel_Color"/>
+    <addaction name="actionFocus"/>
    </widget>
    <widget class="QMenu" name="menuSelect">
     <property name="title">
@@ -71,6 +72,7 @@
    <addaction name="actionObject_Color"/>
    <addaction name="actionVertex_Color"/>
    <addaction name="actionLabel_Color"/>
+   <addaction name="actionFocus"/>
    <addaction name="separator"/>
    <addaction name="actionSelect_Mode"/>
    <addaction name="actionScene_Mode"/>
@@ -191,6 +193,15 @@
    </property>
    <property name="text">
     <string>Label Color</string>
+   </property>
+  </action>
+  <action name="actionFocus">
+   <property name="icon">
+    <iconset>
+     <normaloff>Resources/focus.png</normaloff>Resources/focus.png</iconset>
+   </property>
+   <property name="text">
+    <string>Focus</string>
    </property>
   </action>
  </widget>

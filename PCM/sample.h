@@ -17,7 +17,8 @@ public:
 				mutex_(QMutex::NonRecursive){}
 	~Sample();
 
-	inline Vertex* operator[]( IndexType i ) const{ return vertices_[i]; }
+	inline Vertex& operator[]( IndexType i ) const{ return *vertices_[i]; }
+	
 
 	Vertex* add_vertex( const PointType& pos,const NormalType& n,
 		const ColorType& c);

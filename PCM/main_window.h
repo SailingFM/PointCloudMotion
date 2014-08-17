@@ -8,6 +8,7 @@
 #include <string>
 #include <map>
 #include <QLabel>
+#include "select_tool.h"
 
 using namespace std;
 
@@ -38,11 +39,15 @@ public:
 		void setVertexColorMode();
 		void setLabelColorMode();
 
+		void setSelectToolMode();
+		void setSceneToolMode();
+
 private:
 		void createAction();
 		void createFileMenuAction();
 		void createPaintSettingAction();
 		void createAlgorithmAction();
+		void createToolAction();
 		void createTreeWidgetItems();
 		void createStatusBar();
 		void resetSampleSet();
@@ -62,7 +67,7 @@ private:
 	int			cur_select_sample_idx_;
 	int			last_select_sample_idx_;
 
-
+	Tool*			single_operate_tool_;
 
 };
 

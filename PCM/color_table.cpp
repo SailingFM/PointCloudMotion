@@ -39,4 +39,13 @@ namespace Color_Utility
 
 		return color_from_table(rand_idx_array[random_int]);
 	}
+
+
+	ColorType	span_color_from_table( IndexType idx )
+	{
+		static const IndexType color_step = 67;
+		IndexType	color_idx =  (idx * color_step) % 255;
+		return Color_Utility::color_from_table(color_idx);
+
+	}
 }

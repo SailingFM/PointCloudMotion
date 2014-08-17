@@ -42,7 +42,7 @@ public:
 
 	inline void draw_without_color();
 	inline void draw_without_color(const Matrix44& adjust_matrix);
-	void draw_with_name(unsigned int idx);
+	void draw_with_name(unsigned int idx, const Matrix44& adjust_matrix);
 
 protected:
 	PointType position_;

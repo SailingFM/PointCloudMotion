@@ -3,7 +3,7 @@
 
 namespace FileIO
 {
-	Sample* load_point_cloud_file( std::string filename, FILE_TYPE type )
+	Sample* load_point_cloud_file( std::string filename, FILE_TYPE type, IndexType sample_idx )
 	{
 		FILE* in_file = fopen(filename.c_str(), "r");
 
@@ -37,12 +37,13 @@ namespace FileIO
 			NormalType nv(nx,ny,nz);
 
 			new_sample->add_vertex(v, nv, cv);
+		
 
 		}
 
 		//give the new sample a color
 		new_sample->set_visble(false);
-		new_sample->set_color( Color_Utility::random_color_from_table() );
+		new_sample->set_color( Color_Utility::span_color_from_table( sample_idx ) );
 		new_sample->build_kdtree();
 		return new_sample;
 

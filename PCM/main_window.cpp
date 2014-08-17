@@ -76,6 +76,7 @@ void main_window::createAction()
 	createFileMenuAction();
 	createPaintSettingAction();
 	createAlgorithmAction();
+	createToolAction();
 
 }
 
@@ -94,6 +95,11 @@ void main_window::createPaintSettingAction()
 	connect(ui.actionLabel_Color, SIGNAL(triggered()), this, SLOT(setLabelColorMode()));
 }
 
+void main_window::createToolAction()
+{
+	connect( ui.actionSelect_Mode, SIGNAL(triggered()), this, SLOT(setSelectToolMode()) );
+	connect( ui.actionScene_Mode, SIGNAL(triggered()),this, SLOT(setSceneToolMode()));
+}
 
 void main_window::setObjectColorMode()
 {
@@ -110,6 +116,31 @@ void main_window::setVertexColorMode()
 void main_window::setLabelColorMode()
 {
 	main_canvas_->which_color_mode_ = PaintCanvas::LABEL_COLOR;
+	main_canvas_->updateGL();
+}
+
+void main_window::setSelectToolMode()
+{
+	if (cur_select_sample_idx_==-1)
+	{
+		return;
+	}
+
+	if (main_canvas_->single_operate_tool_)
+	{
+		delete main_canvas_->single_operate_tool_;
+	}
+	main_canvas_->single_operate_tool_ = new SelectTool(main_canvas_);
+	main_canvas_->single_operate_tool_->set_tool_type(Tool::SELECT_TOOL);
+	main_canvas_->single_operate_tool_->set_cur_smaple_to_operate(cur_select_sample_idx_);
+
+	main_canvas_->updateGL();
+
+}
+
+void main_window::setSceneToolMode()
+{
+	main_canvas_->single_operate_tool_->set_tool_type(Tool::EMPTY_TOOL);
 	main_canvas_->updateGL();
 }
 
@@ -136,14 +167,14 @@ bool main_window::openFile()
 
 bool main_window::setSampleVisible()
 {
-	SampleSet::get_instance()[cur_select_sample_idx_]->set_visble(true);
+	SampleSet::get_instance()[cur_select_sample_idx_].set_visble(true);
 	main_canvas_->updateGL();
 	return true;
 }
 
 bool main_window::setSampleInvisible()
 {
-	SampleSet::get_instance()[cur_select_sample_idx_]->set_visble(false);
+	SampleSet::get_instance()[cur_select_sample_idx_].set_visble(false);
 	main_canvas_->updateGL();
 	return true;
 }
@@ -155,11 +186,11 @@ void main_window::selectedSampleChanged(QTreeWidgetItem * item, int column)
 
 	if (last_select_sample_idx_!= -1)
 	{
-		SampleSet::get_instance()[last_select_sample_idx_]->set_selected(false);
+		SampleSet::get_instance()[last_select_sample_idx_].set_selected(false);
 	}
 	if ( cur_select_sample_idx_ != -1)
 	{
-		SampleSet::get_instance()[cur_select_sample_idx_]->set_selected(true);
+		SampleSet::get_instance()[cur_select_sample_idx_].set_selected(true);
 	}
 	main_canvas_->updateGL();
 
@@ -181,8 +212,8 @@ bool main_window::openFiles()
 	file_dir.setFilter(QDir::Files);
 
 	QFileInfoList file_list = file_dir.entryInfoList();
-	int file_idx = 0;
-	for (int file_idx = 0; file_idx < file_list.size(); file_idx++)
+	IndexType sample_idx = 0;
+	for (IndexType file_idx = 0; file_idx < file_list.size(); file_idx++)
 	{
 		QFileInfo file_info = file_list.at(file_idx);
 		FileIO::FILE_TYPE file_type;
@@ -195,15 +226,16 @@ bool main_window::openFiles()
 		{
 			continue;
 		}
+
 		string file_path = file_info.filePath().toStdString();
 		cur_import_files_attr_.push_back( make_pair(FileSystem::base_name(file_path), 
 													FileSystem::extension(file_path)) );
 
-		Sample* new_sample = FileIO::load_point_cloud_file(file_path, file_type);
+		Sample* new_sample = FileIO::load_point_cloud_file(file_path, file_type,sample_idx);
 		if (new_sample != nullptr)
 		{
-
 			SampleSet::get_instance().push_back(new_sample);
+			sample_idx++;
 		}
 
 	}
@@ -236,12 +268,12 @@ void main_window::createTreeWidgetItems()
 		QTreeWidgetItem* item = new QTreeWidgetItem(ui.treeWidget); 
 
 		QString name(cur_import_files_attr_[sample_idx].first.c_str());
-		ColorType color = set[ sample_idx ]->color();
+		ColorType color = set[ sample_idx ].color();
 
 		item->setData(0, Qt::DisplayRole, sample_idx);
 		item->setData(1, Qt::DisplayRole,name);
 		item->setData(2,Qt::DecorationRole, QColor(color(0)*255, color(1)*255, color(2)*255) );
-		item->setData( 3, Qt::DisplayRole, set[sample_idx]->num_vertices() );
+		item->setData( 3, Qt::DisplayRole, set[sample_idx].num_vertices() );
 
 		ui.treeWidget->insertTopLevelItem(sample_idx, item);
 	}
@@ -266,11 +298,11 @@ void main_window::showCoordinateAndIndexUnderMouse( const QPoint& point )
 	}
 	else
 	{
-		Sample* cur_selected_sample = SampleSet::get_instance()[cur_select_sample_idx_];
+		Sample& cur_selected_sample = SampleSet::get_instance()[cur_select_sample_idx_];
 		Vec4 v_pre(v.x,v.y,v.z,1.);
 		//Necessary to do this step, convert view-sample space to world-sample space
-		v_pre = cur_selected_sample->matrix_to_scene_coord().inverse() * v_pre;
-		idx = cur_selected_sample->closest_vtx( PointType(v_pre(0), v_pre(1), v_pre(2)) );
+		v_pre = cur_selected_sample.matrix_to_scene_coord().inverse() * v_pre;
+		idx = cur_selected_sample.closest_vtx( PointType(v_pre(0), v_pre(1), v_pre(2)) );
 	}
 	QString idx_str = QString("VERTEX INDEX = [%1]").arg(idx);
 	vtx_idx_underMouse_label_->setText( idx_str );

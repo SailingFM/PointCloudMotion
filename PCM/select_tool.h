@@ -1,16 +1,20 @@
 #ifndef _SELECT_TOOL_H
 #define _SELECT_TOOL_H
 #include "tool.h"
+#include "basic_types.h"
+#include <vector>
 
 class PaintCanvas;
 
+/*	Rectangle Select Tool	*/
 class SelectTool : public Tool
 {
 public:
 
-	enum SELECT_MODE{ POINT_SELECT, RECT_SELECT };
 
-	SelectTool(PaintCanvas* canvas):Tool(canvas){}
+	SelectTool(PaintCanvas* canvas):Tool(canvas),
+							select_buffer_(nullptr),
+							select_buffer_size_(0){}
 	~SelectTool(){}
 
 	virtual void move(QMouseEvent *e);
@@ -19,27 +23,29 @@ public:
 	virtual void press(QMouseEvent* e);
 	virtual void draw();
 
+
 protected:
-	void select();
-	void post_select();
+	inline void select();
+	inline void begin_select();
+	inline void end_select();
 
 private:
 	void draw_rectangle();
+	inline void initialize_select_buffer();
 
 private:
 
 	QPoint	mouse_pressed_pos_;
 	QPoint	mouse_move_pos_;
 
+	std::vector<IndexType> selected_vertex_indices_;
+
 	int		select_buffer_size_;
 	unsigned int*	select_buffer_;
 
-	SELECT_MODE		cur_select_mode_;
 
 	QRect	rectangle_;
 
-	int				select_region_width_;
-	int				select_region_height_;
 
 };
 

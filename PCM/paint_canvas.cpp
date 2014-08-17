@@ -12,7 +12,8 @@ using namespace qglviewer;
 PaintCanvas::PaintCanvas(const QGLFormat& format, QWidget *parent):
 	QGLViewer(format, parent),
 	coord_system_region_size_(150),
-	which_color_mode_(OBJECT_COLOR)
+	which_color_mode_(OBJECT_COLOR),
+	single_operate_tool_(nullptr)
 {
 	main_window_ = (main_window*)parent;
 
@@ -29,6 +30,12 @@ void PaintCanvas::draw()
 
 	drawCornerAxis();
 
+	if (single_operate_tool_!=nullptr && single_operate_tool_->tool_type()!=Tool::EMPTY_TOOL)
+	{
+		single_operate_tool_->draw();
+		return;
+	}
+
 	SampleSet& set = SampleSet::get_instance();
 	if ( !set.empty() )
 	{
@@ -39,13 +46,13 @@ void PaintCanvas::draw()
 			switch (which_color_mode_)
 			{
 			case PaintCanvas::VERTEX_COLOR:
-				set[i]->draw(ColorMode::VertexColorMode());
+				set[i].draw(ColorMode::VertexColorMode());
 				break;
 			case PaintCanvas::OBJECT_COLOR:
-				set[i]->draw(ColorMode::ObjectColorMode());
+				set[i].draw(ColorMode::ObjectColorMode());
 				break;
 			case PaintCanvas::LABEL_COLOR:
-				set[i]->draw(ColorMode::LabelColorMode());
+				set[i].draw(ColorMode::LabelColorMode());
 				break;
 			default:
 				break;
@@ -54,6 +61,8 @@ void PaintCanvas::draw()
 		}
 		glEnable(GL_MULTISAMPLE);
 	}
+
+
 }
 
 void PaintCanvas::init()
@@ -150,19 +159,44 @@ void PaintCanvas::drawCornerAxis()
 
 void PaintCanvas::mousePressEvent(QMouseEvent *e)
 {
-	QGLViewer::mousePressEvent(e);
+	if (single_operate_tool_!=nullptr && 
+		single_operate_tool_->tool_type()!=Tool::EMPTY_TOOL)
+	{
+		single_operate_tool_->press(e);
+	}
+	else
+		QGLViewer::mousePressEvent(e);
+
+
 }
 
 void PaintCanvas::mouseMoveEvent(QMouseEvent *e)
 {
 	main_window_->showCoordinateAndIndexUnderMouse( e->pos() );
 
-	QGLViewer::mouseMoveEvent(e);
+	if (single_operate_tool_!=nullptr && 
+		single_operate_tool_->tool_type()!=Tool::EMPTY_TOOL)
+	{
+		single_operate_tool_->move(e);
+	}
+	else
+		QGLViewer::mouseMoveEvent(e);
+
+
 }
 
 void PaintCanvas::mouseReleaseEvent(QMouseEvent *e)
 {
-	QGLViewer::mouseReleaseEvent(e);
+	if (single_operate_tool_!=nullptr && 
+		single_operate_tool_->tool_type()!=Tool::EMPTY_TOOL
+		)
+	{
+		single_operate_tool_->release(e);
+	}
+	else
+		QGLViewer::mouseReleaseEvent(e);
+
+
 }
 
 void PaintCanvas::wheelEvent(QWheelEvent *e)

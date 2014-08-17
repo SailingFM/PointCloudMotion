@@ -105,9 +105,10 @@ void Sample::draw(ColorMode::LabelColorMode)
 
 void Sample::draw_with_name()
 {
+	Matrix44 mat = matrix_to_scene_coord();
 	for( unsigned int idx = 0; idx < vertices_.size(); idx++ )
 	{
-		vertices_[idx]->draw_with_name(idx);
+		vertices_[idx]->draw_with_name(idx,mat);
 	}
 }
 

@@ -2,7 +2,8 @@
 #define _PAINT_CANVAS_H
 
 #include "QGLViewer/qglviewer.h"
-#include "tool.h"
+#include "select_tool.h"
+
 
 class main_window;
 
@@ -33,11 +34,13 @@ protected:
 private:
 	int				coord_system_region_size_;
 	main_window*	main_window_;
-	Tool*			single_operate_tool_;
+
 
 public:
 	enum WhichColorMode{ VERTEX_COLOR, OBJECT_COLOR, LABEL_COLOR };
 	WhichColorMode	which_color_mode_;
+
+	Tool*	single_operate_tool_;
 };
 
 #endif

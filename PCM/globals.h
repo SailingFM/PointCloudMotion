@@ -4,12 +4,15 @@
 #include <QMutex>
 
 
+
+#define HELLO
+
 namespace Paint_Param
 {
 	extern ScalarType	g_point_size;
 }
 
-#define		LOCK(x)		x->lock()
-#define		UNLOCK(x)	x->unlock()
+#define		LOCK(x)		x.lock()
+#define		UNLOCK(x)	x.unlock()
 
 #endif
