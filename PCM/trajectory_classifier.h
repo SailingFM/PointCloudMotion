@@ -14,6 +14,8 @@ public:
 
 	signals:
 		void finish_compute();
+public:
+	void derive_rotation_by_svd(VecX& rot,const MatrixX3 &X,  MatrixX3& Y,MatrixXXi& vtx_map);
 
 private:
 	void derive_rotation_by_svd( VecX& rot,const MatrixX3 &X, const MatrixX3& Y);

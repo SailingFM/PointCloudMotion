@@ -5,15 +5,12 @@
 #include <algorithm>
 #include <opencv2/core/core.hpp>
 #include <opencv2/core/eigen.hpp>
-#include "tracer.h"
 
 void TrajectoryClassifier::run(){
 
 	Logger << "Begin Clustering.\n";
 
 	SampleSet& set = SampleSet::get_instance();
-
-	Tracer::get_instance().clear_records();
 
 	if (set.empty())
 	{
@@ -31,24 +28,30 @@ void TrajectoryClassifier::run(){
 
 	//Rotation feature for clustering
 	MatrixXX	rot_feature_mat( num_vtx, (num_sample-1)*9 );
-
-
+	// vertex correspondence
+	MatrixXXi    vet_map(1,num_vtx);
+	SICP::Parameters para;
 
 	//Step 1: compute rotate feature
 
 	for(IndexType s_idx = 0; s_idx < num_sample - 1;
 			s_idx++ )
 	{
-		const Matrix3X&	orig_vtx_coord_matrix = set[s_idx].vertices_matrix();
-		const Matrix3X&	dest_vtx_coord_matrix = set[s_idx + 1].vertices_matrix();
+		//const Matrix3X&	orig_vtx_coord_matrix = set[s_idx]->vertices_matrix();
+		//const Matrix3X&	dest_vtx_coord_matrix = set[s_idx + 1]->vertices_matrix();
+
+		Matrix3X&	orig_vtx_coord_matrix = set[s_idx].vertices_matrix();
+		Matrix3X&	dest_vtx_coord_matrix = set[s_idx + 1].vertices_matrix();
+		// test SICP
+
+// 		Logger<<orig_vtx_coord_matrix.col(2)<<".\n";
+// 		SICP::point_to_point(orig_vtx_coord_matrix,dest_vtx_coord_matrix,vet_map,para);
+// 		set[s_idx].update();
+// 		Logger<<orig_vtx_coord_matrix.col(2)<<".\n";
+// 		Logger<<vet_map; 
+
 		for (IndexType v_idx = 0; v_idx < num_vtx; v_idx++)
 		{
-
-
-			if (v_idx==2128)
-			{
-				Tracer::get_instance().add_record( s_idx,v_idx, s_idx+1, v_idx );
-			}
 			
 			VecX rot(9,1);
 			IndexType origin_neighbours[num_of_neighbours];
@@ -58,11 +61,11 @@ void TrajectoryClassifier::run(){
 			set[s_idx].neighbours(v_idx, num_of_neighbours, origin_neighbours);
 			set[s_idx + 1].neighbours(v_idx, num_of_neighbours, dest_neighbours);
 
-			std::sort( origin_neighbours, origin_neighbours+num_of_neighbours );
-			std::sort( dest_neighbours, dest_neighbours + num_of_neighbours );
 
 			MatrixX3	X(num_of_neighbours, 3);
 			MatrixX3	Y(num_of_neighbours, 3);
+
+
 
 			for ( int j = 0; j<num_of_neighbours; j++ )
 			{
@@ -73,7 +76,12 @@ void TrajectoryClassifier::run(){
 							dest_vtx_coord_matrix(1, dest_neighbours[j]),
 							dest_vtx_coord_matrix(2, dest_neighbours[j]);
 			}
-			derive_rotation_by_svd(rot, X, Y);
+
+			MatrixXXi    vtx_map(1,num_of_neighbours);
+			SICP::point_to_point(X.transpose(),Y.transpose(),vtx_map,para);
+
+			//derive_rotation_by_svd(rot, X, Y);
+			derive_rotation_by_svd(rot,X,Y,vtx_map);
 
 			rot_feature_mat.block<1,9>( v_idx,s_idx*9 ) << rot.transpose();
 		}
@@ -85,7 +93,7 @@ void TrajectoryClassifier::run(){
 	Mat labels;
 	Mat centers;
 	eigen2cv( rot_feature_mat, cluster_data );
-	kmeans( cluster_data, 2, labels,  
+	kmeans( cluster_data, 10, labels,  
 		TermCriteria( CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, 200, 0.00001),
 		5, KMEANS_PP_CENTERS, centers);
 
@@ -118,6 +126,30 @@ void TrajectoryClassifier::derive_rotation_by_svd( VecX& rot, const MatrixX3& X,
 	if(svd.matrixU().determinant()*svd.matrixV().determinant() < 0.0) {
 		Vec3 S = Vec3::Ones(); S(2) = -1.0;
 		 rot_mat = svd.matrixV()*S.asDiagonal()*svd.matrixU().transpose();
+	} else {
+		rot_mat = svd.matrixV()*svd.matrixU().transpose();
+	}
+
+	rot.block<3,1>(0,0) << rot_mat.row(0).transpose();
+	rot.block<3,1>(3,0) << rot_mat.row(1).transpose();
+	rot.block<3,1>(6,0) << rot_mat.row(2).transpose();
+}
+void TrajectoryClassifier::derive_rotation_by_svd(VecX& rot,const MatrixX3 &X, MatrixX3& Y,MatrixXXi& vtx_map)
+{
+	MatrixXX temp = Y;
+	int verN = temp.rows();
+	for (int i = 0; i < verN; i++)
+	{
+		Y.row(i) = temp.row(vtx_map(0,i));
+	}
+
+	Matrix33 sigma = (X.rowwise() - X.colwise().mean()).transpose() * (Y.rowwise() - Y.colwise().mean());
+	Matrix33 rot_mat;
+
+	Eigen::JacobiSVD<Matrix33> svd(sigma, Eigen::ComputeFullU | Eigen::ComputeFullV);
+	if(svd.matrixU().determinant()*svd.matrixV().determinant() < 0.0) {
+		Vec3 S = Vec3::Ones(); S(2) = -1.0;
+		rot_mat = svd.matrixV()*S.asDiagonal()*svd.matrixU().transpose();
 	} else {
 		rot_mat = svd.matrixV()*svd.matrixU().transpose();
 	}
