@@ -36,7 +36,7 @@ Vertex* Sample::add_vertex(const PointType& pos = NULL_POINT,
 	return new_vtx;
 }
 
-void Sample::draw(ColorMode::ObjectColorMode)
+void Sample::draw(ColorMode::ObjectColorMode, const Vec3& bias )
 {
 	if (!visible_)
 	{
@@ -58,13 +58,13 @@ void Sample::draw(ColorMode::ObjectColorMode)
 	Matrix44 mat = matrix_to_scene_coord();
 	for ( IndexType i = 0; i < vertices_.size(); i++ )
 	{
-		vertices_[i]->draw_without_color(mat);
+		vertices_[i]->draw_without_color(mat, bias);
 	}
 	glEnd();
 
 }
 
-void Sample::draw(ColorMode::VertexColorMode)
+void Sample::draw(ColorMode::VertexColorMode, const Vec3& bias)
 {
 	if (!visible_)
 	{
@@ -84,7 +84,7 @@ void Sample::draw(ColorMode::VertexColorMode)
 
 }
 
-void Sample::draw(ColorMode::LabelColorMode)
+void Sample::draw(ColorMode::LabelColorMode, const Vec3& bias)
 {
 	if ( selected_ )
 	{

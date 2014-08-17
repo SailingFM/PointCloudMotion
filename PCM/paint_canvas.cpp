@@ -2,6 +2,7 @@
 #include "sample_set.h"
 #include "main_window.h"
 #include "basic_types.h"
+#include "tracer.h"
 using namespace qglviewer;
 
 #ifndef GL_MULTISAMPLE
@@ -49,7 +50,8 @@ void PaintCanvas::draw()
 				set[i].draw(ColorMode::VertexColorMode());
 				break;
 			case PaintCanvas::OBJECT_COLOR:
-				set[i].draw(ColorMode::ObjectColorMode());
+				set[i].draw(ColorMode::ObjectColorMode(), 
+					Vec3(0.,0.,Paint_Param::g_step_size*i));
 				break;
 			case PaintCanvas::LABEL_COLOR:
 				set[i].draw(ColorMode::LabelColorMode());
@@ -62,6 +64,8 @@ void PaintCanvas::draw()
 		glEnable(GL_MULTISAMPLE);
 	}
 
+	//draw line tracer
+	Tracer::get_instance().draw();
 
 }
 
@@ -214,6 +218,17 @@ void PaintCanvas::wheelEvent(QWheelEvent *e)
 
 		updateGL();
 	}
+
+	if (e->modifiers() == Qt::AltModifier)
+	{
+		int numDegrees = e->delta() / 120;
+
+		Paint_Param::g_step_size += 0.1f * numDegrees;
+	
+
+		updateGL();
+	}
+
 
 	QGLViewer::wheelEvent(e);
 }

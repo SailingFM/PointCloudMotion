@@ -23,9 +23,9 @@ public:
 	Vertex* add_vertex( const PointType& pos,const NormalType& n,
 		const ColorType& c);
 
-	void draw(ColorMode::ObjectColorMode);
-	void draw(ColorMode::VertexColorMode);
-	void draw(ColorMode::LabelColorMode);
+	void draw(ColorMode::ObjectColorMode, const Vec3& bias = Vec3(0.,0.,0.));
+	void draw(ColorMode::VertexColorMode,const Vec3& bias = Vec3(0.,0.,0.));
+	void draw(ColorMode::LabelColorMode,const Vec3& bias = Vec3(0.,0.,0.));
 	void draw_with_name();
 
 	size_t num_vertices() const { return vertices_.size(); }

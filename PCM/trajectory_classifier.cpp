@@ -5,12 +5,15 @@
 #include <algorithm>
 #include <opencv2/core/core.hpp>
 #include <opencv2/core/eigen.hpp>
+#include "tracer.h"
 
 void TrajectoryClassifier::run(){
 
 	Logger << "Begin Clustering.\n";
 
 	SampleSet& set = SampleSet::get_instance();
+
+	Tracer::get_instance().clear_records();
 
 	if (set.empty())
 	{
@@ -22,7 +25,7 @@ void TrajectoryClassifier::run(){
 	const IndexType num_of_neighbours = 9;
 
 	IndexType	num_sample = set.size();
-	IndexType	num_vtx	= set[0]->num_vertices();
+	IndexType	num_vtx	= set[0].num_vertices();
 
 
 
@@ -30,23 +33,30 @@ void TrajectoryClassifier::run(){
 	MatrixXX	rot_feature_mat( num_vtx, (num_sample-1)*9 );
 
 
+
 	//Step 1: compute rotate feature
 
 	for(IndexType s_idx = 0; s_idx < num_sample - 1;
 			s_idx++ )
 	{
-		const Matrix3X&	orig_vtx_coord_matrix = set[s_idx]->vertices_matrix();
-		const Matrix3X&	dest_vtx_coord_matrix = set[s_idx + 1]->vertices_matrix();
+		const Matrix3X&	orig_vtx_coord_matrix = set[s_idx].vertices_matrix();
+		const Matrix3X&	dest_vtx_coord_matrix = set[s_idx + 1].vertices_matrix();
 		for (IndexType v_idx = 0; v_idx < num_vtx; v_idx++)
 		{
+
+
+			if (v_idx==2128)
+			{
+				Tracer::get_instance().add_record( s_idx,v_idx, s_idx+1, v_idx );
+			}
 			
 			VecX rot(9,1);
 			IndexType origin_neighbours[num_of_neighbours];
 			IndexType dest_neighbours[num_of_neighbours];
 
 			//Get neighbours of the specific vertex between two sample
-			set[s_idx]->neighbours(v_idx, num_of_neighbours, origin_neighbours);
-			set[s_idx + 1]->neighbours(v_idx, num_of_neighbours, dest_neighbours);
+			set[s_idx].neighbours(v_idx, num_of_neighbours, origin_neighbours);
+			set[s_idx + 1].neighbours(v_idx, num_of_neighbours, dest_neighbours);
 
 			std::sort( origin_neighbours, origin_neighbours+num_of_neighbours );
 			std::sort( dest_neighbours, dest_neighbours + num_of_neighbours );
@@ -82,10 +92,10 @@ void TrajectoryClassifier::run(){
 
 	//Step 3: Store the results
 	LOCK( set[0] );
-	Sample* sample0 = set[0];
+	Sample& sample0 = set[0];
 	IndexType i = 0;
-	for (Sample::vtx_iterator v_iter = sample0->begin();
-		v_iter != sample0->end();
+	for (Sample::vtx_iterator v_iter = sample0.begin();
+		v_iter != sample0.end();
 		v_iter++,i++ )
 	{
 		(*v_iter)->set_label( labels.at<IndexType>(i) );

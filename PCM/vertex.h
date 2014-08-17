@@ -37,11 +37,13 @@ public:
 	*/
 	void draw();
 	void draw( const Matrix44& adjust_matrix );
+	void draw( const Matrix44& adjust_matrix, const Vec3& bias );
 	
 	void draw_with_label( const Matrix44& adjust_matrix );
 
 	inline void draw_without_color();
 	inline void draw_without_color(const Matrix44& adjust_matrix);
+	inline void draw_without_color(const Matrix44& adjust_matrix, const Vec3& bias);
 	void draw_with_name(unsigned int idx, const Matrix44& adjust_matrix);
 
 protected:

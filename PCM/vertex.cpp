@@ -45,6 +45,31 @@ void  Vertex::draw_without_color( const Matrix44& adjust_matrix)
 	glVertex3f( point_to_show(0), point_to_show(1), point_to_show(2) );
 }
 
+void Vertex::draw( const Matrix44& adjust_matrix, const Vec3& bias )
+{
+	if (!visible_)
+	{
+		return;
+	}
+	glColor4f( color_(0), color_(1), color_(2), color_(3) );
+	draw_without_color(adjust_matrix, bias);
+}
+
+void Vertex::draw_without_color(const Matrix44& adjust_matrix, const Vec3& bias)
+{
+	if (!visible_)
+	{
+		return;
+	}
+
+	glNormal3f( normal_(0), normal_(1), normal_(2));
+	Vec4	tmp(position_(0), position_(1), position_(2),1.);
+	Vec4	point_to_show = adjust_matrix * tmp;
+	glVertex3f( point_to_show(0) + bias(0), 
+		point_to_show(1) + bias(1), 
+		point_to_show(2) + bias(2));
+}
+
 void Vertex::draw_with_name(unsigned int idx, const Matrix44& adjust_matrix)
 {
 	glPushName(idx);

@@ -299,7 +299,7 @@ void main_window::showCoordinateAndIndexUnderMouse( const QPoint& point )
 	else
 	{
 		Sample& cur_selected_sample = SampleSet::get_instance()[cur_select_sample_idx_];
-		Vec4 v_pre(v.x,v.y,v.z,1.);
+		Vec4 v_pre(v.x,v.y,v.z - Paint_Param::g_step_size*cur_select_sample_idx_ ,1.);
 		//Necessary to do this step, convert view-sample space to world-sample space
 		v_pre = cur_selected_sample.matrix_to_scene_coord().inverse() * v_pre;
 		idx = cur_selected_sample.closest_vtx( PointType(v_pre(0), v_pre(1), v_pre(2)) );
