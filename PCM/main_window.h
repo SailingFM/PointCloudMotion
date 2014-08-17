@@ -42,6 +42,9 @@ public:
 		void setSelectToolMode();
 		void setSceneToolMode();
 
+		void showTracer();
+		void clearTracer();
+
 private:
 		void createAction();
 		void createFileMenuAction();
@@ -68,6 +71,7 @@ private:
 	int			last_select_sample_idx_;
 
 	Tool*			single_operate_tool_;
+
 
 };
 

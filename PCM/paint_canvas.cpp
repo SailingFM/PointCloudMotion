@@ -14,7 +14,8 @@ PaintCanvas::PaintCanvas(const QGLFormat& format, QWidget *parent):
 	QGLViewer(format, parent),
 	coord_system_region_size_(150),
 	which_color_mode_(OBJECT_COLOR),
-	single_operate_tool_(nullptr)
+	single_operate_tool_(nullptr),
+	show_trajectory_(false)
 {
 	main_window_ = (main_window*)parent;
 
@@ -65,7 +66,11 @@ void PaintCanvas::draw()
 	}
 
 	//draw line tracer
-	Tracer::get_instance().draw();
+	if (show_trajectory_)
+	{
+		Tracer::get_instance().draw();
+	}
+
 
 }
 

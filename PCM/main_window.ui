@@ -39,6 +39,8 @@
     <addaction name="actionVertex_Color"/>
     <addaction name="actionLabel_Color"/>
     <addaction name="actionOriginal_Location"/>
+    <addaction name="actionShow_Tracjectory"/>
+    <addaction name="actionDont_Trace"/>
    </widget>
    <widget class="QMenu" name="menuSelect">
     <property name="title">
@@ -68,6 +70,8 @@
    <addaction name="actionImportFiles"/>
    <addaction name="actionSet_Visible"/>
    <addaction name="actionSet_Invisible"/>
+   <addaction name="actionShow_Tracjectory"/>
+   <addaction name="actionDont_Trace"/>
    <addaction name="separator"/>
    <addaction name="actionObject_Color"/>
    <addaction name="actionVertex_Color"/>
@@ -202,6 +206,24 @@
    </property>
    <property name="text">
     <string>Original Location</string>
+   </property>
+  </action>
+  <action name="actionShow_Tracjectory">
+   <property name="icon">
+    <iconset>
+     <normaloff>Resources/show_trace.png</normaloff>Resources/show_trace.png</iconset>
+   </property>
+   <property name="text">
+    <string>Show Tracjectory</string>
+   </property>
+  </action>
+  <action name="actionDont_Trace">
+   <property name="icon">
+    <iconset>
+     <normaloff>Resources/dont_trace.png</normaloff>Resources/dont_trace.png</iconset>
+   </property>
+   <property name="text">
+    <string>Dont Trace</string>
    </property>
   </action>
  </widget>

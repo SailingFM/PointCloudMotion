@@ -19,6 +19,8 @@ public:
 	void forceUpdate(){};
 	void updateCanvas(){};
 
+	void setTracerShowOrNot( bool b ){ show_trajectory_=b; }
+
 protected:
 	virtual void draw();
 	virtual void init();
@@ -41,6 +43,8 @@ public:
 	WhichColorMode	which_color_mode_;
 
 	Tool*	single_operate_tool_;
+
+	bool			show_trajectory_;
 };
 
 #endif

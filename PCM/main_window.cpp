@@ -18,6 +18,7 @@
 #include "color_table.h"
 #include "time.h"
 #include "trajectory_classifier.h"
+#include "tracer.h"
 
 using namespace qglviewer;
 using namespace std;
@@ -93,6 +94,8 @@ void main_window::createPaintSettingAction()
 	connect(ui.actionObject_Color, SIGNAL(triggered()), this, SLOT(setObjectColorMode()));
 	connect(ui.actionVertex_Color, SIGNAL(triggered()), this, SLOT(setVertexColorMode()));
 	connect(ui.actionLabel_Color, SIGNAL(triggered()), this, SLOT(setLabelColorMode()));
+	connect(ui.actionShow_Tracjectory, SIGNAL(triggered()), this, SLOT(showTracer()));
+	connect(ui.actionDont_Trace,SIGNAL(triggered()), this, SLOT(clearTracer()));
 }
 
 void main_window::createToolAction()
@@ -194,6 +197,19 @@ void main_window::selectedSampleChanged(QTreeWidgetItem * item, int column)
 	}
 	main_canvas_->updateGL();
 
+}
+
+void main_window::showTracer()
+{
+	main_canvas_->setTracerShowOrNot(true);
+	main_canvas_->updateGL();
+}
+
+void main_window::clearTracer()
+{
+	main_canvas_->setTracerShowOrNot(false);
+	Tracer::get_instance().clear_records();
+	main_canvas_->updateGL();
 }
 
 bool main_window::openFiles()
