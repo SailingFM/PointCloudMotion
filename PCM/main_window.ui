@@ -38,7 +38,7 @@
     <addaction name="actionObject_Color"/>
     <addaction name="actionVertex_Color"/>
     <addaction name="actionLabel_Color"/>
-    <addaction name="actionFocus"/>
+    <addaction name="actionOriginal_Location"/>
    </widget>
    <widget class="QMenu" name="menuSelect">
     <property name="title">
@@ -72,7 +72,7 @@
    <addaction name="actionObject_Color"/>
    <addaction name="actionVertex_Color"/>
    <addaction name="actionLabel_Color"/>
-   <addaction name="actionFocus"/>
+   <addaction name="actionOriginal_Location"/>
    <addaction name="separator"/>
    <addaction name="actionSelect_Mode"/>
    <addaction name="actionScene_Mode"/>
@@ -195,13 +195,13 @@
     <string>Label Color</string>
    </property>
   </action>
-  <action name="actionFocus">
+  <action name="actionOriginal_Location">
    <property name="icon">
     <iconset>
-     <normaloff>Resources/focus.png</normaloff>Resources/focus.png</iconset>
+     <normaloff>Resources/tree2.png</normaloff>Resources/tree2.png</iconset>
    </property>
    <property name="text">
-    <string>Focus</string>
+    <string>Original Location</string>
    </property>
   </action>
  </widget>
