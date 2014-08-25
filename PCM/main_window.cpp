@@ -19,6 +19,7 @@
 #include "time.h"
 #include "trajectory_classifier.h"
 #include "tracer.h"
+#include "spectral_clustering.h"
 
 using namespace qglviewer;
 using namespace std;
@@ -85,6 +86,7 @@ void main_window::createAction()
 void main_window::createAlgorithmAction()
 {
 	connect(ui.actionClustering, SIGNAL(triggered()), this, SLOT(doClustering()));
+	connect(ui.actionSpectral_Clustering, SIGNAL(triggered()),this, SLOT(doSpectralClustering()) );
 }
 
 void main_window::createPaintSettingAction()
@@ -315,7 +317,9 @@ void main_window::showCoordinateAndIndexUnderMouse( const QPoint& point )
 	else
 	{
 		Sample& cur_selected_sample = SampleSet::get_instance()[cur_select_sample_idx_];
-		Vec4 v_pre(v.x,v.y,v.z - Paint_Param::g_step_size*cur_select_sample_idx_ ,1.);
+		Vec4 v_pre(v.x - Paint_Param::g_step_size(0)*cur_select_sample_idx_,
+			v.y - Paint_Param::g_step_size(1)*cur_select_sample_idx_,
+			v.z - Paint_Param::g_step_size(2)*cur_select_sample_idx_ ,1.);
 		//Necessary to do this step, convert view-sample space to world-sample space
 		v_pre = cur_selected_sample.matrix_to_scene_coord().inverse() * v_pre;
 		idx = cur_selected_sample.closest_vtx( PointType(v_pre(0), v_pre(1), v_pre(2)) );
@@ -332,6 +336,14 @@ void main_window::doClustering()
 	connect(classifier, SIGNAL(finish_compute()), this, SLOT(finishClustering()));
 	connect(classifier, SIGNAL(finished()), classifier, SLOT(deleteLater() ));
 	classifier->start();
+}
+
+void main_window::doSpectralClustering()
+{
+	SpectralClusteringThread* cluster = new SpectralClusteringThread;
+	connect(cluster, SIGNAL(finished()), cluster, SLOT(deleteLater() ));
+	cluster->start();
+
 }
 
 void main_window::finishClustering()

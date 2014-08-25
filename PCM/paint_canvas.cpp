@@ -3,6 +3,7 @@
 #include "main_window.h"
 #include "basic_types.h"
 #include "tracer.h"
+#include "globals.h"
 using namespace qglviewer;
 
 #ifndef GL_MULTISAMPLE
@@ -52,7 +53,7 @@ void PaintCanvas::draw()
 				break;
 			case PaintCanvas::OBJECT_COLOR:
 				set[i].draw(ColorMode::ObjectColorMode(), 
-					Vec3(0.,0.,Paint_Param::g_step_size*i));
+					Paint_Param::g_step_size * (ScalarType)i);
 				break;
 			case PaintCanvas::LABEL_COLOR:
 				set[i].draw(ColorMode::LabelColorMode());
@@ -224,16 +225,32 @@ void PaintCanvas::wheelEvent(QWheelEvent *e)
 		updateGL();
 	}
 
-	if (e->modifiers() == Qt::AltModifier)
+	if (e->modifiers() == Qt::AltModifier )
 	{
 		int numDegrees = e->delta() / 120;
 
-		Paint_Param::g_step_size += 0.1f * numDegrees;
+		Paint_Param::g_step_size(2) += 0.1f * numDegrees;
 	
 
 		updateGL();
 	}
+	else if( e->modifiers() == (Qt::AltModifier|Qt::ControlModifier) )
+	{
+		int numDegrees = e->delta() / 120;
+
+		Paint_Param::g_step_size(1) += 0.1f * numDegrees;
 
 
+		updateGL();
+	}
+	else if( e->modifiers() == (Qt::AltModifier|Qt::ControlModifier|Qt::ShiftModifier) )  
+	{
+		int numDegrees = e->delta() / 120;
+
+		Paint_Param::g_step_size(0) += 0.1f * numDegrees;
+
+
+		updateGL();
+	}
 	QGLViewer::wheelEvent(e);
 }

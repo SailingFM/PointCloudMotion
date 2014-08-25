@@ -67,8 +67,9 @@ public:
 				Vec4(sample0_vtx.x(), sample0_vtx.y(),sample0_vtx.z(),1.0);
 			Vec4	second_v	= set[sample1_idx].matrix_to_scene_coord() *
 				Vec4(sample1_vtx.x(), sample1_vtx.y(),sample1_vtx.z(),1.0);
-			glVertex3f( first_v(0),first_v(1),first_v(2) + Paint_Param::g_step_size*sample0_idx );
-			glVertex3f( second_v(0), second_v(1),second_v(2) + Paint_Param::g_step_size*sample1_idx );
+			Vec3 bias = Paint_Param::g_step_size * (ScalarType)sample0_idx;
+			glVertex3f( first_v(0)+bias(0),first_v(1)+bias(1),first_v(2)+bias(2) );
+			glVertex3f( second_v(0)+bias(0), second_v(1)+bias(1),second_v(2) + bias(2) );
 
 
 

@@ -10,7 +10,7 @@
 namespace Paint_Param
 {
 	extern ScalarType	g_point_size;
-	extern	ScalarType	g_step_size;
+	extern	Vec3	g_step_size;
 }
 
 #define		LOCK(x)		x.lock()
