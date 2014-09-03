@@ -46,12 +46,12 @@
       <ParseFiles>false</ParseFiles>
     </Filter>
     <Filter Include="Generated Files\Debug">
-      <UniqueIdentifier>{d7026e0b-e44e-44a4-a69f-b0b59fb3f7cd}</UniqueIdentifier>
+      <UniqueIdentifier>{d440e698-094c-4568-a843-406dfea9f69f}</UniqueIdentifier>
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
     <Filter Include="Generated Files\Release">
-      <UniqueIdentifier>{f035ab0c-97f0-427a-a47b-0211cf3cd879}</UniqueIdentifier>
+      <UniqueIdentifier>{7b13ebe6-8443-4fb5-82db-34094fb7ca9f}</UniqueIdentifier>
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
@@ -269,7 +269,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="E:\Download\libQGLViewer-2.5.2\libQGLViewer-2.5.2\QGLViewer\QGLViewer_resource.rc" />
-    <ResourceCompile Include="E:\Download\libQGLViewer-2.5.2\libQGLViewer-2.5.2\QGLViewer\QGLViewerd_resource.rc" />
+    <ResourceCompile Include="C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\QGLViewer\QGLViewer_resource.rc" />
+    <ResourceCompile Include="C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\QGLViewer\QGLViewerd_resource.rc" />
   </ItemGroup>
 </Project>

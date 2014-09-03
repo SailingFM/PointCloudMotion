@@ -254,3 +254,29 @@ void PaintCanvas::wheelEvent(QWheelEvent *e)
 	}
 	QGLViewer::wheelEvent(e);
 }
+
+void PaintCanvas::keyPressEvent(QKeyEvent * e)
+{
+	if ( e->key() ==Qt::Key_Delete )
+	{
+		if (single_operate_tool_!=nullptr && 
+			single_operate_tool_->tool_type()==Tool::SELECT_TOOL
+			)
+		{
+			SelectTool*	select_tool = dynamic_cast<SelectTool*>(single_operate_tool_);
+
+			const std::vector<IndexType>& selected_items =  select_tool->get_selected_vertex_idx();
+			
+			IndexType cur_selected_sample_idx = select_tool->cur_sample_to_operate();
+			Sample& smp = SampleSet::get_instance()[cur_selected_sample_idx];
+
+			smp.lock();
+			smp.delete_vertex_group( selected_items);
+			smp.unlock();
+			
+			//reset tree widget
+			main_window_->createTreeWidgetItems();
+			updateGL();
+		}
+	}
+}

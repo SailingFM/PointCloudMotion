@@ -28,6 +28,7 @@
      <string>Files</string>
     </property>
     <addaction name="actionImportFiles"/>
+    <addaction name="actionSaveFiles"/>
    </widget>
    <widget class="QMenu" name="menuPaint">
     <property name="title">
@@ -55,10 +56,17 @@
     </property>
     <addaction name="actionClustering"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionScanner"/>
+   </widget>
    <addaction name="menuFiles"/>
    <addaction name="menuPaint"/>
    <addaction name="menuSelect"/>
    <addaction name="menuAlgorithm"/>
+   <addaction name="menuTools"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -68,6 +76,9 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionImportFiles"/>
+   <addaction name="actionSaveFiles"/>
+   <addaction name="actionScanner"/>
+   <addaction name="separator"/>
    <addaction name="actionSet_Visible"/>
    <addaction name="actionSet_Invisible"/>
    <addaction name="actionShow_Tracjectory"/>
@@ -80,8 +91,8 @@
    <addaction name="separator"/>
    <addaction name="actionSelect_Mode"/>
    <addaction name="actionScene_Mode"/>
-   <addaction name="separator"/>
    <addaction name="actionClustering"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidget">
@@ -224,6 +235,24 @@
    </property>
    <property name="text">
     <string>Dont Trace</string>
+   </property>
+  </action>
+  <action name="actionScanner">
+   <property name="icon">
+    <iconset>
+     <normaloff>Resources/camera.png</normaloff>Resources/camera.png</iconset>
+   </property>
+   <property name="text">
+    <string>Scanner</string>
+   </property>
+  </action>
+  <action name="actionSaveFiles">
+   <property name="icon">
+    <iconset>
+     <normaloff>Resources/save_file.png</normaloff>Resources/save_file.png</iconset>
+   </property>
+   <property name="text">
+    <string>saveFiles</string>
    </property>
   </action>
  </widget>

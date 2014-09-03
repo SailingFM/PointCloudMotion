@@ -24,16 +24,22 @@ public:
 
 	void showCoordinateAndIndexUnderMouse( const QPoint& point );
 
+	void createTreeWidgetItems();
+
 	public slots:
 		bool openFile();
 		bool openFiles();
+		bool saveFiles();
 		void selectedSampleChanged(QTreeWidgetItem * item, int column);
 
 		bool setSampleVisible();
 		bool setSampleInvisible();
 
-		void doClustering();
+		void doSpectralClustering();
 		void finishClustering();
+
+		void openScanner();
+		void closeScanner();
 
 		void setObjectColorMode();
 		void setVertexColorMode();
@@ -51,7 +57,7 @@ private:
 		void createPaintSettingAction();
 		void createAlgorithmAction();
 		void createToolAction();
-		void createTreeWidgetItems();
+
 		void createStatusBar();
 		void resetSampleSet();
 

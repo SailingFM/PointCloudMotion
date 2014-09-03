@@ -28,6 +28,13 @@ public:
 	ScalarType x() const { return position_(0); }
 	ScalarType y() const { return position_(1); }
 	ScalarType z() const { return position_(2); }
+	ScalarType nx() const { return normal_(0); }
+	ScalarType ny() const { return normal_(1); }
+	ScalarType nz() const { return normal_(2); }
+	ScalarType r() const { return color_(0); }
+	ScalarType g() const { return color_(1); }
+	ScalarType b() const { return color_(2); }
+	ScalarType alpha() const { return color_(3); }
 
 	/*
 		Without adjust_matrix is not recommend,

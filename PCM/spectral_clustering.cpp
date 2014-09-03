@@ -5,8 +5,6 @@
 #include "globals.h"
 #include "engine.h"
 #include <assert.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/core/eigen.hpp>
 #include <stdio.h>  /* defines FILENAME_MAX */
 #ifdef WIN32
 #include <direct.h>
@@ -31,7 +29,7 @@ void SpectralClusteringThread::run()
  	 const IndexType num_of_neighbours = 20;
 	 IndexType num_of_cluster = 10;
  	 IndexType	num_sample = set.size();
- 	 IndexType	dim = 4*(num_sample-1);
+ 	 IndexType	dim = 4*(num_sample-1) + 3*num_sample;
  	 MatrixXX	feature_vector( num_vtx, dim );
 
 	 std::cout<<" Number of Cluster :";
@@ -87,6 +85,18 @@ void SpectralClusteringThread::run()
 		 }
 	 }
 
+	 //Add position features
+	 for(IndexType s_idx = 0; s_idx < num_sample;
+		 s_idx++ )
+	 {
+		 for (IndexType v_idx = 0; v_idx < num_vtx; v_idx++)
+		 {
+			feature_vector.block<1,3>( v_idx, (num_sample-1)*4+s_idx*3 ) << set[s_idx][v_idx].x(), set[s_idx][v_idx].y(), set[s_idx][v_idx].z();
+		 }
+
+	 }
+
+
 
 
 	/** Step 2: Spectral Clustering, use Matlab **/
@@ -136,7 +146,9 @@ void SpectralClusteringThread::run()
 	char	cmd_buf[128];
 	engEvalString( ep, cmd_buf );
 	//use default sigma
-	sprintf(cmd_buf,"[labels]=sc(data,%d,100,0,%d);",num_of_neighbours, num_of_cluster);
+	//sprintf(cmd_buf,"[labels]=sc(data,%d,100,0,%d);",num_of_neighbours, num_of_cluster);
+	//just kmeans here
+	sprintf(cmd_buf, "[labels]=k_means(data,\'random\',%d);",num_of_cluster);
 	engEvalString(ep,cmd_buf);
  
   

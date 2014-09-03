@@ -23,6 +23,8 @@ public:
 	Vertex* add_vertex( const PointType& pos,const NormalType& n,
 		const ColorType& c);
 
+	void delete_vertex_group( const std::vector<IndexType>& idx_grp );
+
 	void draw(ColorMode::ObjectColorMode, const Vec3& bias = Vec3(0.,0.,0.));
 	void draw(ColorMode::VertexColorMode,const Vec3& bias = Vec3(0.,0.,0.));
 	void draw(ColorMode::LabelColorMode,const Vec3& bias = Vec3(0.,0.,0.));
@@ -48,7 +50,14 @@ public:
 	inline Matrix44 matrix_to_scene_coord(  );
 
 	/* Green channel to get all vertex position information */
-	inline  Matrix3X&	vertices_matrix() { return vtx_matrix_; }
+	inline  Matrix3X&	vertices_matrix()
+	{	
+		if (kd_tree_should_rebuild_)
+		{
+			build_kdtree();
+		}
+		return vtx_matrix_; 
+	}
 	/*Update vertex position according vertex matrix*/
 	void	update();
 

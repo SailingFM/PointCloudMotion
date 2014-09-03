@@ -20,6 +20,7 @@
 #include "trajectory_classifier.h"
 #include "tracer.h"
 #include "spectral_clustering.h"
+#include "scanner.h"
 
 using namespace qglviewer;
 using namespace std;
@@ -51,7 +52,7 @@ main_window::main_window(QWidget *parent)
 
 	//Codes for initializing treeWidget
 	QStringList headerLabels;
-	headerLabels <<"Index"<< "Name" << "Label" << "#Point";
+	headerLabels <<"Index"<<  "Label" << "#Point";
 	ui.treeWidget->setHeaderLabels(headerLabels);
 	ui.treeWidget->setColumnWidth( 0,50 );
 	connect(ui.treeWidget, SIGNAL(itemClicked( QTreeWidgetItem * , int  ) ),
@@ -80,13 +81,14 @@ void main_window::createAction()
 	createAlgorithmAction();
 	createToolAction();
 
+	connect(ui.actionScanner,SIGNAL(triggered()), this, SLOT(openScanner()));
+
 }
 
 
 void main_window::createAlgorithmAction()
 {
-	connect(ui.actionClustering, SIGNAL(triggered()), this, SLOT(doClustering()));
-	connect(ui.actionSpectral_Clustering, SIGNAL(triggered()),this, SLOT(doSpectralClustering()) );
+	connect(ui.actionClustering, SIGNAL(triggered()), this, SLOT(doSpectralClustering()));
 }
 
 void main_window::createPaintSettingAction()
@@ -152,6 +154,7 @@ void main_window::setSceneToolMode()
 void main_window::createFileMenuAction()
 {
 	connect(ui.actionImportFiles, SIGNAL(triggered()),this, SLOT(openFiles()));
+	connect(ui.actionSaveFiles,SIGNAL(triggered()), this, SLOT(saveFiles()) );
 }
 
 bool main_window::openFile()
@@ -199,6 +202,20 @@ void main_window::selectedSampleChanged(QTreeWidgetItem * item, int column)
 	}
 	main_canvas_->updateGL();
 
+}
+
+void main_window::openScanner()
+{
+	Scanner* scanner_thread = new Scanner;
+	connect(scanner_thread, SIGNAL(finished()), scanner_thread, SLOT(deleteLater() ));
+	connect(scanner_thread, SIGNAL(finished_scan()), this, SLOT(closeScanner()) );
+	scanner_thread->start();
+
+}
+
+void main_window::closeScanner()
+{
+	createTreeWidgetItems();
 }
 
 void main_window::showTracer()
@@ -264,6 +281,15 @@ bool main_window::openFiles()
 	return true;
 }
 
+bool main_window::saveFiles()
+{
+	QString dir = QFileDialog::getExistingDirectory(this,tr("Save point cloud files"),".");
+	if (dir.isEmpty())
+		return false;
+	FileIO::save_point_cloud_to_file( dir.toStdString()+"\\", FileIO::XYZ );
+
+}
+
 void main_window::createStatusBar()
 {
 	coord_underMouse_label_ = new QLabel(this);
@@ -285,13 +311,12 @@ void main_window::createTreeWidgetItems()
 	{
 		QTreeWidgetItem* item = new QTreeWidgetItem(ui.treeWidget); 
 
-		QString name(cur_import_files_attr_[sample_idx].first.c_str());
+
 		ColorType color = set[ sample_idx ].color();
 
 		item->setData(0, Qt::DisplayRole, sample_idx);
-		item->setData(1, Qt::DisplayRole,name);
-		item->setData(2,Qt::DecorationRole, QColor(color(0)*255, color(1)*255, color(2)*255) );
-		item->setData( 3, Qt::DisplayRole, set[sample_idx].num_vertices() );
+		item->setData(1,Qt::DecorationRole, QColor(color(0)*255, color(1)*255, color(2)*255) );
+		item->setData(2, Qt::DisplayRole, set[sample_idx].num_vertices() );
 
 		ui.treeWidget->insertTopLevelItem(sample_idx, item);
 	}
@@ -330,13 +355,6 @@ void main_window::showCoordinateAndIndexUnderMouse( const QPoint& point )
 	return;
 }
 
-void main_window::doClustering()
-{
-	TrajectoryClassifier* classifier = new TrajectoryClassifier();
-	connect(classifier, SIGNAL(finish_compute()), this, SLOT(finishClustering()));
-	connect(classifier, SIGNAL(finished()), classifier, SLOT(deleteLater() ));
-	classifier->start();
-}
 
 void main_window::doSpectralClustering()
 {
@@ -345,6 +363,8 @@ void main_window::doSpectralClustering()
 	cluster->start();
 
 }
+
+
 
 void main_window::finishClustering()
 {

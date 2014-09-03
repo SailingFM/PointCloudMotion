@@ -149,19 +149,23 @@ void SelectTool::end_select()
 	SampleSet& set = SampleSet::get_instance();
 	
 	//reset selected vertex
-	LOCK(set[cur_sample_to_operate_]);
-	for (IndexType i = 0; i < selected_vertex_indices_.size(); i++)
+	Sample& smp = set[cur_sample_to_operate_];
+	LOCK(smp);
+	for (IndexType i = 0; i < smp.num_vertices(); i++)
 	{
-		set(cur_sample_to_operate_, selected_vertex_indices_[i]).set_selected(false);
+		smp[i].set_selected(false);
 	}
-	selected_vertex_indices_.clear();
-	UNLOCK(set[cur_sample_to_operate_]);
+
+	UNLOCK(smp);
 
 	// Interpret results : each object created 4 values in the selectBuffer().
 	// (selectBuffer())[4*i+3] is the id pushed on the stack.
+	selected_vertex_indices_.clear();
 	for (int i=0; i<nbHits; ++i)
 		selected_vertex_indices_.push_back(select_buffer_[4*i+3]);
 	
+	std::sort( selected_vertex_indices_.begin(), selected_vertex_indices_.end() );
+
 	LOCK(set[cur_sample_to_operate_]);
 		
 		for (IndexType i = 0; i < selected_vertex_indices_.size(); i++)

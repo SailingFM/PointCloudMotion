@@ -8,6 +8,7 @@ namespace FileIO
 
 	Sample* load_point_cloud_file( std::string filename, FILE_TYPE type, IndexType );
 
+	void		save_point_cloud_to_file( std::string filename_prefix, FILE_TYPE type );
 }
 
 #endif

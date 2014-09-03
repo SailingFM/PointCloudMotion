@@ -205,3 +205,37 @@ void Sample::update()
 	kd_tree_should_rebuild_ = true;
 	build_kdtree();
 }
+
+void Sample::delete_vertex_group(const std::vector<IndexType>& idx_grp )
+{
+	IndexType  i=0, j=0;
+	IndexType size = idx_grp.size();
+	if (size==0)
+	{
+		return;
+	}
+	for ( std::vector<Vertex*>::iterator iter = vertices_.begin();
+		iter != vertices_.end(); i++)
+	{
+		if ( i == idx_grp[j] )
+		{
+			//This is the node to delete
+			iter = vertices_.erase( iter );
+			j++;
+			if ( j>=size )
+			{
+				break;
+			}
+		}
+		else
+		{
+			iter++;
+		}
+	}
+
+	//kdtree dirty
+	kd_tree_should_rebuild_ = true;
+	build_kdtree();
+
+}
+

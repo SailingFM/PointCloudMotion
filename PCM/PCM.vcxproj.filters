@@ -101,14 +101,14 @@
     <ClCompile Include="select_tool.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_trajectory_classifier.cpp">
+    <ClCompile Include="spectral_clustering.cpp">
+      <Filter>Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_spectral_clustering.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_trajectory_classifier.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_spectral_clustering.cpp">
       <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="trajectory_classifier.cpp">
-      <Filter>Algorithm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -118,9 +118,6 @@
     <CustomBuild Include="main_window.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="trajectory_classifier.h">
-      <Filter>Algorithm</Filter>
-    </CustomBuild>
     <CustomBuild Include="main_window.h">
       <Filter>Visualize</Filter>
     </CustomBuild>
@@ -129,6 +126,9 @@
     </CustomBuild>
     <CustomBuild Include="dlg_clustering.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="spectral_clustering.h">
+      <Filter>Algorithm</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +188,9 @@
     </ClInclude>
     <ClInclude Include="dlg_clustering.h">
       <Filter>Visualize</Filter>
+    </ClInclude>
+    <ClInclude Include="math_fun.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -30,6 +30,7 @@ protected:
 	virtual void mousePressEvent(QMouseEvent *e);
 	virtual void mouseMoveEvent(QMouseEvent *e);
 	virtual void mouseReleaseEvent(QMouseEvent *e);
+	virtual void keyPressEvent(QKeyEvent * e);
 
 	// wheel event
 	virtual void wheelEvent(QWheelEvent *e);

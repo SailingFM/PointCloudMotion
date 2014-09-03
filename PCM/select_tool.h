@@ -22,6 +22,11 @@ public:
 	virtual void release(QMouseEvent *e);
 	virtual void press(QMouseEvent* e);
 	virtual void draw();
+	
+	const std::vector<IndexType>& get_selected_vertex_idx()
+	{
+		return selected_vertex_indices_;
+	}
 
 
 protected:

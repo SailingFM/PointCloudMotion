@@ -1,5 +1,7 @@
 #include "file_io.h"
 #include "basic_types.h"
+#include "sample_set.h"
+#include <stdio.h>
 
 namespace FileIO
 {
@@ -47,5 +49,32 @@ namespace FileIO
 		new_sample->build_kdtree();
 		return new_sample;
 
+	}
+
+	void save_point_cloud_to_file(  std::string filename_prefix, FILE_TYPE type  )
+	{
+		SampleSet& set = SampleSet::get_instance();
+		char filename[FILENAME_MAX];
+		for (IndexType s_idx=0; s_idx<set.size(); s_idx++)
+		{
+			sprintf(filename, "%s%d.xyz", filename_prefix.c_str(), s_idx);
+			FILE* out_file = fopen( filename, "w" );
+			if (out_file==NULL)
+			{
+				Logger << "write "<<filename<<" error.\n"; 
+				return;
+			}
+			for (IndexType v_idx=0; v_idx<set[s_idx].num_vertices(); v_idx++)
+			{
+				Vertex& v = set[s_idx][v_idx];
+
+				fprintf( out_file, "%f %f %f %f %f %f %f %f %f\n", v.x(), v.y(),v.z(),
+								v.nx(), v.ny(),v.nz(),
+								v.r(), v.g(), v.b() );
+			}
+			fclose( out_file );
+		}
+
+		Logger << "finished write files.\n";
 	}
 }
