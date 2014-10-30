@@ -9,8 +9,14 @@
 
 namespace Paint_Param
 {
-	extern ScalarType	g_point_size;
 	extern	Vec3	g_step_size;
+	extern ScalarType g_point_size;
+}
+
+namespace Register_Param
+{
+	extern MatrixXXi g_traj_matrix;
+	extern bool g_is_traj_compute;
 }
 
 #define		LOCK(x)		x.lock()

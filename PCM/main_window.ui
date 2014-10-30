@@ -42,6 +42,7 @@
     <addaction name="actionOriginal_Location"/>
     <addaction name="actionShow_Tracjectory"/>
     <addaction name="actionDont_Trace"/>
+    <addaction name="actionShow_Normal"/>
    </widget>
    <widget class="QMenu" name="menuSelect">
     <property name="title">
@@ -55,12 +56,16 @@
      <string>Algorithm</string>
     </property>
     <addaction name="actionClustering"/>
+    <addaction name="actionTraj_Clustering"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>Tools</string>
     </property>
     <addaction name="actionScanner"/>
+    <addaction name="actionShow_Selected_Trajectory"/>
+    <addaction name="actionCompute_Normal"/>
+    <addaction name="actionRandom_Sample"/>
    </widget>
    <addaction name="menuFiles"/>
    <addaction name="menuPaint"/>
@@ -253,6 +258,36 @@
    </property>
    <property name="text">
     <string>saveFiles</string>
+   </property>
+  </action>
+  <action name="actionRegister">
+   <property name="text">
+    <string>Register</string>
+   </property>
+  </action>
+  <action name="actionShow_Normal">
+   <property name="text">
+    <string>Show Normal</string>
+   </property>
+  </action>
+  <action name="actionShow_Selected_Trajectory">
+   <property name="text">
+    <string>Show Selected Trajectory</string>
+   </property>
+  </action>
+  <action name="actionCompute_Normal">
+   <property name="text">
+    <string>Compute Normal</string>
+   </property>
+  </action>
+  <action name="actionTraj_Clustering">
+   <property name="text">
+    <string>Traj_Clustering</string>
+   </property>
+  </action>
+  <action name="actionRandom_Sample">
+   <property name="text">
+    <string>Random Sample</string>
    </property>
   </action>
  </widget>

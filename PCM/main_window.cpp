@@ -21,6 +21,9 @@
 #include "tracer.h"
 #include "spectral_clustering.h"
 #include "scanner.h"
+#include "show_normal_tool.h"
+#include "sample_properity.h"
+#include "traj_clustering.h"
 
 using namespace qglviewer;
 using namespace std;
@@ -82,6 +85,7 @@ void main_window::createAction()
 	createToolAction();
 
 	connect(ui.actionScanner,SIGNAL(triggered()), this, SLOT(openScanner()));
+	connect( ui.actionShow_Selected_Trajectory, SIGNAL(triggered()), this, SLOT(showSelectedTrajectory()) );
 
 }
 
@@ -89,6 +93,8 @@ void main_window::createAction()
 void main_window::createAlgorithmAction()
 {
 	connect(ui.actionClustering, SIGNAL(triggered()), this, SLOT(doSpectralClustering()));
+	connect(ui.actionTraj_Clustering, SIGNAL(triggered()), this, SLOT(doTrajClustering()));
+
 }
 
 void main_window::createPaintSettingAction()
@@ -106,6 +112,9 @@ void main_window::createToolAction()
 {
 	connect( ui.actionSelect_Mode, SIGNAL(triggered()), this, SLOT(setSelectToolMode()) );
 	connect( ui.actionScene_Mode, SIGNAL(triggered()),this, SLOT(setSceneToolMode()));
+	connect( ui.actionShow_Normal, SIGNAL(triggered()), this, SLOT(setNormalToolMode()) );
+	connect( ui.actionCompute_Normal, SIGNAL(triggered()), this, SLOT(computeSampleNormal()) );
+
 }
 
 void main_window::setObjectColorMode()
@@ -143,6 +152,23 @@ void main_window::setSelectToolMode()
 
 	main_canvas_->updateGL();
 
+}
+
+void main_window::setNormalToolMode()
+{
+	if (cur_select_sample_idx_ == -1)
+	{
+		return;
+	}
+	if (main_canvas_->single_operate_tool_)
+	{
+		delete main_canvas_->single_operate_tool_;
+	}
+	main_canvas_->single_operate_tool_ = new ShowNormalTool(main_canvas_);
+	main_canvas_->single_operate_tool_->set_tool_type(Tool::SHOW_NORMAL_TOOL);
+	main_canvas_->single_operate_tool_->set_cur_smaple_to_operate( cur_select_sample_idx_ );
+
+	main_canvas_->updateGL();
 }
 
 void main_window::setSceneToolMode()
@@ -216,6 +242,11 @@ void main_window::openScanner()
 void main_window::closeScanner()
 {
 	createTreeWidgetItems();
+}
+
+void main_window::showSelectedTrajectory()
+{
+	main_canvas_->showSelectedTraj();
 }
 
 void main_window::showTracer()
@@ -302,6 +333,12 @@ void main_window::createStatusBar()
 	ui.statusBar->addWidget( vtx_idx_underMouse_label_, 0 );
 }
 
+void main_window::computeSampleNormal()
+{
+	auto camera_look_at = main_canvas_->camera()->viewDirection();
+	SampleManipulation::compute_normal( cur_select_sample_idx_ ,NormalType(camera_look_at.x, camera_look_at.y, camera_look_at.z));
+}
+
 void main_window::createTreeWidgetItems()
 {
 	ui.treeWidget->clear();
@@ -364,6 +401,13 @@ void main_window::doSpectralClustering()
 
 }
 
+void main_window::doTrajClustering()
+{
+	TrajClusteringThread* cluster = new TrajClusteringThread;
+	connect( cluster, SIGNAL(finished()), cluster, SLOT(deleteLater()) );
+	cluster->start();
+
+}
 
 
 void main_window::finishClustering()

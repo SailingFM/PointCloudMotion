@@ -4,6 +4,7 @@
 #include "basic_types.h"
 #include "tracer.h"
 #include "globals.h"
+#include "tracer.h"
 using namespace qglviewer;
 
 #ifndef GL_MULTISAMPLE
@@ -14,7 +15,7 @@ using namespace qglviewer;
 PaintCanvas::PaintCanvas(const QGLFormat& format, QWidget *parent):
 	QGLViewer(format, parent),
 	coord_system_region_size_(150),
-	which_color_mode_(OBJECT_COLOR),
+	which_color_mode_(VERTEX_COLOR),
 	single_operate_tool_(nullptr),
 	show_trajectory_(false)
 {
@@ -33,11 +34,13 @@ void PaintCanvas::draw()
 
 	drawCornerAxis();
 
+	//tool mode
 	if (single_operate_tool_!=nullptr && single_operate_tool_->tool_type()!=Tool::EMPTY_TOOL)
 	{
 		single_operate_tool_->draw();
 		return;
 	}
+
 
 	SampleSet& set = SampleSet::get_instance();
 	if ( !set.empty() )
@@ -49,7 +52,7 @@ void PaintCanvas::draw()
 			switch (which_color_mode_)
 			{
 			case PaintCanvas::VERTEX_COLOR:
-				set[i].draw(ColorMode::VertexColorMode());
+				set[i].draw(ColorMode::VertexColorMode(),Paint_Param::g_step_size * (ScalarType)i);
 				break;
 			case PaintCanvas::OBJECT_COLOR:
 				set[i].draw(ColorMode::ObjectColorMode(), 
@@ -71,6 +74,8 @@ void PaintCanvas::draw()
 	{
 		Tracer::get_instance().draw();
 	}
+
+
 
 
 }
@@ -170,11 +175,11 @@ void PaintCanvas::drawCornerAxis()
 void PaintCanvas::mousePressEvent(QMouseEvent *e)
 {
 	if (single_operate_tool_!=nullptr && 
-		single_operate_tool_->tool_type()!=Tool::EMPTY_TOOL)
+		single_operate_tool_->tool_type()==Tool::SELECT_TOOL)
 	{
 		single_operate_tool_->press(e);
 	}
-	else
+	//else
 		QGLViewer::mousePressEvent(e);
 
 
@@ -185,7 +190,7 @@ void PaintCanvas::mouseMoveEvent(QMouseEvent *e)
 	main_window_->showCoordinateAndIndexUnderMouse( e->pos() );
 
 	if (single_operate_tool_!=nullptr && 
-		single_operate_tool_->tool_type()!=Tool::EMPTY_TOOL)
+		single_operate_tool_->tool_type()==Tool::SELECT_TOOL)
 	{
 		single_operate_tool_->move(e);
 	}
@@ -198,7 +203,7 @@ void PaintCanvas::mouseMoveEvent(QMouseEvent *e)
 void PaintCanvas::mouseReleaseEvent(QMouseEvent *e)
 {
 	if (single_operate_tool_!=nullptr && 
-		single_operate_tool_->tool_type()!=Tool::EMPTY_TOOL
+		single_operate_tool_->tool_type()==Tool::SELECT_TOOL
 		)
 	{
 		single_operate_tool_->release(e);
@@ -279,4 +284,44 @@ void PaintCanvas::keyPressEvent(QKeyEvent * e)
 			updateGL();
 		}
 	}
+}
+
+void PaintCanvas::showSelectedTraj()
+{
+	if (single_operate_tool_!=nullptr /*&& 
+									  Register_Param::g_is_traj_compute == true*/)
+	{
+		SelectTool*	select_tool = dynamic_cast<SelectTool*>(single_operate_tool_);
+		const std::vector<IndexType>& selected_items =  select_tool->get_selected_vertex_idx();
+
+		Tracer& tracer = Tracer::get_instance();
+		tracer.clear_records();
+
+		IndexType m = (SampleSet::get_instance()).size(); 
+		IndexType n = (SampleSet::get_instance()[0]).num_vertices();
+		MatrixXXi mat( n,m );
+		for (IndexType i =0; i < m; i++)
+		{
+			for (IndexType j=0; j<n; j++)
+			{
+				mat(j,i) = j;
+			}
+		}
+
+		Register_Param::g_traj_matrix = mat;
+
+		for ( IndexType i=0; i<selected_items.size(); i++ )
+		{
+			IndexType selected_idx = selected_items[i];
+			
+			auto traj = Register_Param::g_traj_matrix.row(selected_idx);
+			IndexType traj_num = Register_Param::g_traj_matrix.cols() -1;
+
+			for ( IndexType j=0; j<traj_num; j++ )
+			{
+				tracer.add_record(  j, traj(j) , j+1, traj(j+1) );
+			}
+		}
+	}
+	this->show_trajectory_ = true;
 }

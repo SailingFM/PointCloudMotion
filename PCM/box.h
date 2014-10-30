@@ -60,6 +60,9 @@ public:
 		return ( low_corner_ + high_corner_ )/2;
 	}
 
+	const PointType low_corner() const{ return low_corner_; }
+	const PointType high_corner() const{ return high_corner_; }
+
 private:
 	PointType low_corner_;
 	PointType high_corner_;

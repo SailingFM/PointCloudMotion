@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h</Extensions>
-    </Filter>
     <Filter Include="Form Files">
       <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
       <Extensions>ui</Extensions>
@@ -110,6 +106,39 @@
     <ClCompile Include="GeneratedFiles\Release\moc_spectral_clustering.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="scanner.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scanner.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scanner.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="DeformableRegistration.cpp">
+      <Filter>Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_DeformaleRegistration.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_DeformaleRegistration.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="show_normal_tool.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="sample_properity.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_traj_clustering.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_traj_clustering.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="traj_clustering.cpp">
+      <Filter>Algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="main_window.ui">
@@ -130,67 +159,97 @@
     <CustomBuild Include="spectral_clustering.h">
       <Filter>Algorithm</Filter>
     </CustomBuild>
+    <CustomBuild Include="scanner.h">
+      <Filter>Utility</Filter>
+    </CustomBuild>
+    <CustomBuild Include="DeformaleRegistration.h">
+      <Filter>Algorithm</Filter>
+    </CustomBuild>
+    <CustomBuild Include="traj_clustering.h">
+      <Filter>Algorithm</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeneratedFiles\ui_dlg_clustering.h">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeneratedFiles\ui_main_window.h">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="box.h">
+      <Filter>Geometry</Filter>
+    </CustomBuild>
+    <CustomBuild Include="sample.h">
+      <Filter>Geometry</Filter>
+    </CustomBuild>
+    <CustomBuild Include="sample_set.h">
+      <Filter>Geometry</Filter>
+    </CustomBuild>
+    <CustomBuild Include="selectable_item.h">
+      <Filter>Geometry</Filter>
+    </CustomBuild>
+    <CustomBuild Include="vertex.h">
+      <Filter>Geometry</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ICP\ICP.h">
+      <Filter>Utility</Filter>
+    </CustomBuild>
+    <CustomBuild Include="color_table.h">
+      <Filter>Utility</Filter>
+    </CustomBuild>
+    <CustomBuild Include="sample_properity.h">
+      <Filter>Utility</Filter>
+    </CustomBuild>
+    <CustomBuild Include="console.h">
+      <Filter>Utility</Filter>
+    </CustomBuild>
+    <CustomBuild Include="file_io.h">
+      <Filter>Utility</Filter>
+    </CustomBuild>
+    <CustomBuild Include="math_fun.h">
+      <Filter>Utility</Filter>
+    </CustomBuild>
+    <CustomBuild Include="file_system.h">
+      <Filter>Utility</Filter>
+    </CustomBuild>
+    <CustomBuild Include="pool_allocator.h">
+      <Filter>Utility</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\ICP\kdtree.hpp">
+      <Filter>Basic</Filter>
+    </CustomBuild>
+    <CustomBuild Include="basic_types.h">
+      <Filter>Basic</Filter>
+    </CustomBuild>
+    <CustomBuild Include="globals.h">
+      <Filter>Basic</Filter>
+    </CustomBuild>
+    <CustomBuild Include="J_linkage.h">
+      <Filter>Tools</Filter>
+    </CustomBuild>
+    <CustomBuild Include="J_linkage_II.h">
+      <Filter>Tools</Filter>
+    </CustomBuild>
+    <CustomBuild Include="select_tool.h">
+      <Filter>Tools</Filter>
+    </CustomBuild>
+    <CustomBuild Include="show_normal_tool.h">
+      <Filter>Tools</Filter>
+    </CustomBuild>
+    <CustomBuild Include="tool.h">
+      <Filter>Tools</Filter>
+    </CustomBuild>
+    <CustomBuild Include="tracer.h">
+      <Filter>Tools</Filter>
+    </CustomBuild>
+    <CustomBuild Include="traj2model_distance.h">
+      <Filter>Algorithm</Filter>
+    </CustomBuild>
+    <CustomBuild Include="dlg_clustering.h">
+      <Filter>Visualize</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GeneratedFiles\ui_main_window.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="file_system.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="vertex.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="basic_types.h">
+    <ClInclude Include="octree.h">
       <Filter>Basic</Filter>
-    </ClInclude>
-    <ClInclude Include="selectable_item.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="globals.h">
-      <Filter>Basic</Filter>
-    </ClInclude>
-    <ClInclude Include="sample_set.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="sample.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="file_io.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="color_table.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="console.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="box.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ICP\ICP.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ICP\kdtree.hpp">
-      <Filter>Basic</Filter>
-    </ClInclude>
-    <ClInclude Include="pool_allocator.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="tool.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="select_tool.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_dlg_clustering.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dlg_clustering.h">
-      <Filter>Visualize</Filter>
-    </ClInclude>
-    <ClInclude Include="math_fun.h">
-      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

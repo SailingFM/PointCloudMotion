@@ -64,8 +64,14 @@ public:
 	inline void lock(){ mutex_.lock(); }
 	inline void unlock(){ mutex_.unlock(); }
 
-// 	const PointType box_center() const{ return box_.center(); }
-// 	const ScalarType	box_diag() const { return box_.diag(); }
+	bool Sample::neighbours(const IndexType query_point_idx, const IndexType num_closet,
+		IndexType* out_indices,ScalarType* out_distances);
+
+
+	const PointType box_center() const{ return box_.center(); }
+	const ScalarType	box_diag() { return box_.diag(); }
+	const PointType box_near_corner(){ return box_.low_corner(); }
+	const PointType box_far_corner(){ return box_.high_corner(); }
 
 private:
 	std::vector<Vertex*>	vertices_;

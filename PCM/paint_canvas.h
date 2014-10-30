@@ -21,6 +21,8 @@ public:
 
 	void setTracerShowOrNot( bool b ){ show_trajectory_=b; }
 
+
+	void showSelectedTraj();
 protected:
 	virtual void draw();
 	virtual void init();

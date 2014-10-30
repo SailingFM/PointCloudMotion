@@ -8,6 +8,7 @@
 #include <stdio.h>  /* defines FILENAME_MAX */
 #ifdef WIN32
 #include <direct.h>
+#include "DeformaleRegistration.h"
 #define get_current_dir _getcwd
 #else
 #include <unistd.h>
@@ -22,83 +23,93 @@ using namespace Eigen;
 void SpectralClusteringThread::run()
 {
 
-
  	 SampleSet& set = SampleSet::get_instance();
-
+	 DeformableRegistration nonrigid;
+	 Logger << "Begin Clustering.\n";
+	 vector<PCloudTraj> totalTraj;
+	 //nonrigid.calculateLifeSpansTraj(totalTraj,2);
+	 nonrigid.calculateFixedLengthTraj(totalTraj,0,7);
+	 MatrixXX feature_vector;
+	 nonrigid.calculateTrajFeature(totalTraj,7,feature_vector);
+	 Logger<<"Finish trajectory and model comuting."<<endl;
+//
  	 const IndexType	num_vtx = set[0].num_vertices();
  	 const IndexType num_of_neighbours = 20;
 	 IndexType num_of_cluster = 10;
- 	 IndexType	num_sample = set.size();
- 	 IndexType	dim = 4*(num_sample-1) + 3*num_sample;
- 	 MatrixXX	feature_vector( num_vtx, dim );
+// 	 IndexType	num_sample = set.size();
+// 	 IndexType	dim = 4*(num_sample-1) + 3*num_sample;
+// 	 MatrixXX	feature_vector( num_vtx, dim );
+//
+//// 	 std::cout<<" Number of Cluster :";
+//// 	 std::cin >> num_of_cluster;
+//	 num_of_cluster = 2;
 
-	 std::cout<<" Number of Cluster :";
-	 std::cin >> num_of_cluster;
-
-	 Logger << "Begin Clustering.\n";
- 	 
-	 /** Step 1: Compute feature vector for every vertex **/
-	 for(IndexType s_idx = 0; s_idx < num_sample - 1;
-		 s_idx++ )
-	 {
-
-		 Matrix3X&	orig_vtx_coord_matrix = set[s_idx].vertices_matrix();
-		 Matrix3X&	dest_vtx_coord_matrix = set[s_idx + 1].vertices_matrix();
-
-
-		 for (IndexType v_idx = 0; v_idx < num_vtx; v_idx++)
-		 {
-
-			 IndexType origin_neighbours[num_of_neighbours];
-			 IndexType dest_neighbours[num_of_neighbours];
-
-			 //Get neighbours of the specific vertex between two sample
-			 set[s_idx].neighbours(v_idx, num_of_neighbours, origin_neighbours);
-			 set[s_idx + 1].neighbours(v_idx, num_of_neighbours, dest_neighbours);
-			 MatrixX3	X(num_of_neighbours, 3);
-			 MatrixX3	Y(num_of_neighbours, 3);
-
-			 for ( int j = 0; j<num_of_neighbours; j++ )
-			 {
-				 X.row(j) << orig_vtx_coord_matrix(0, origin_neighbours[j]),
-					 orig_vtx_coord_matrix(1, origin_neighbours[j]),
-					 orig_vtx_coord_matrix(2, origin_neighbours[j]);
-				 Y.row(j) << dest_vtx_coord_matrix(0, origin_neighbours[j]),
-					 dest_vtx_coord_matrix(1, origin_neighbours[j]),
-					 dest_vtx_coord_matrix(2, origin_neighbours[j]);
-			 }
-
-			 Matrix33 sigma = (X.rowwise() - X.colwise().mean()).transpose() * (Y.rowwise() - Y.colwise().mean());
-			 Matrix33 rot_mat;
-
-			 Eigen::JacobiSVD<Matrix33> svd(sigma, Eigen::ComputeFullU | Eigen::ComputeFullV);
-			 if(svd.matrixU().determinant()*svd.matrixV().determinant() < 0.0) {
-				 Vec3 S = Vec3::Ones(); S(2) = -1.0;
-				 rot_mat = svd.matrixV()*S.asDiagonal()*svd.matrixU().transpose();
-			 } else {
-				 rot_mat = svd.matrixV()*svd.matrixU().transpose();
-			 }
-			 Vec4 quat;
-			 Math_Utility::rotation_matrix2quat(rot_mat,quat);
-
-			 feature_vector.block<1,4>( v_idx,s_idx*4 ) << quat.transpose();
-		 }
-	 }
-
-	 //Add position features
-	 for(IndexType s_idx = 0; s_idx < num_sample;
-		 s_idx++ )
-	 {
-		 for (IndexType v_idx = 0; v_idx < num_vtx; v_idx++)
-		 {
-			feature_vector.block<1,3>( v_idx, (num_sample-1)*4+s_idx*3 ) << set[s_idx][v_idx].x(), set[s_idx][v_idx].y(), set[s_idx][v_idx].z();
-		 }
-
-	 }
-
-
-
-
+// 	 
+//	 ///** Step 1: Compute feature vector for every vertex **/
+//	 //for(IndexType s_idx = 0; s_idx < num_sample - 1;
+//		// s_idx++ )
+//	 //{
+//
+//		// Matrix3X&	orig_vtx_coord_matrix = set[s_idx].vertices_matrix();
+//		// Matrix3X&	dest_vtx_coord_matrix = set[s_idx + 1].vertices_matrix();
+//
+//
+//		// for (IndexType v_idx = 0; v_idx < num_vtx; v_idx++)
+//		// {
+//
+//		//	 IndexType origin_neighbours[num_of_neighbours];
+//		//	 IndexType dest_neighbours[num_of_neighbours];
+//
+//		//	 //Get neighbours of the specific vertex between two sample
+//		//	 set[s_idx].neighbours(v_idx, num_of_neighbours, origin_neighbours);
+//		//	 set[s_idx + 1].neighbours(v_idx, num_of_neighbours, dest_neighbours);
+//		//	 MatrixX3	X(num_of_neighbours, 3);
+//		//	 MatrixX3	Y(num_of_neighbours, 3);
+//
+//		//	 for ( int j = 0; j<num_of_neighbours; j++ )
+//		//	 {
+//		//		 X.row(j) << orig_vtx_coord_matrix(0, origin_neighbours[j]),
+//		//			 orig_vtx_coord_matrix(1, origin_neighbours[j]),
+//		//			 orig_vtx_coord_matrix(2, origin_neighbours[j]);
+//		//		 Y.row(j) << dest_vtx_coord_matrix(0, origin_neighbours[j]),
+//		//			 dest_vtx_coord_matrix(1, origin_neighbours[j]),
+//		//			 dest_vtx_coord_matrix(2, origin_neighbours[j]);
+//		//	 }
+//
+//		//	 Matrix33 sigma = (X.rowwise() - X.colwise().mean()).transpose() * (Y.rowwise() - Y.colwise().mean());
+//		//	 Matrix33 rot_mat;
+//
+//		//	 Eigen::JacobiSVD<Matrix33> svd(sigma, Eigen::ComputeFullU | Eigen::ComputeFullV);
+//		//	 if(svd.matrixU().determinant()*svd.matrixV().determinant() < 0.0) {
+//		//		 Vec3 S = Vec3::Ones(); S(2) = -1.0;
+//		//		 rot_mat = svd.matrixV()*S.asDiagonal()*svd.matrixU().transpose();
+//		//	 } else {
+//		//		 rot_mat = svd.matrixV()*svd.matrixU().transpose();
+//		//	 }
+//		//	 Vec4 quat;
+//		//	 Math_Utility::rotation_matrix2quat(rot_mat,quat);
+//
+//		//	 feature_vector.block<1,4>( v_idx,s_idx*4 ) << quat.transpose();
+//		// }
+//	 //}
+//
+//	 ////Add position features
+//	 //for(IndexType s_idx = 0; s_idx < num_sample;
+//		// s_idx++ )
+//	 //{
+//		// for (IndexType v_idx = 0; v_idx < num_vtx; v_idx++)
+//		// {
+//		//	feature_vector.block<1,3>( v_idx, (num_sample-1)*4+s_idx*3 ) << set[s_idx][v_idx].x(), set[s_idx][v_idx].y(), set[s_idx][v_idx].z();
+//		// }
+//
+//	 //}
+//
+//
+//	 DeformableRegistration nonrigid;
+//	 nonrigid.calculateTrajFrature( feature_vector );
+//
+//
+//
 	/** Step 2: Spectral Clustering, use Matlab **/
   	Engine*	ep;
  	if (! (ep = engOpen(NULL)) )

@@ -3,20 +3,33 @@ E:\CODES\PCM\PCM\X64\DEBUG\MAIN.OBJ
 E:\CODES\PCM\PCM\X64\DEBUG\MOC_MAIN_WINDOW.OBJ
 E:\CODES\PCM\PCM\X64\DEBUG\VC110.PDB
 E:\CODES\PCM\PCM\X64\DEBUG\QRC_MAIN_WINDOW.OBJ
+D:\CODES\POINTCLOUDMOTION\PCM\X64\DEBUG\FILE_SYSTEM.OBJ
+D:\CODES\POINTCLOUDMOTION\PCM\X64\DEBUG\CONSOLE.OBJ
 E:\CODES\PCM\PCM\GENERATEDFILES\DEBUG\MOC_MAIN_WINDOW.CPP
 E:\CODES\PCM\PCM\GENERATEDFILES\UI_MAIN_WINDOW.H
 E:\CODES\PCM\PCM\GENERATEDFILES\QRC_MAIN_WINDOW.CPP
-E:\Codes\PCM\PCM\x64\Debug\main.obj
-E:\Codes\PCM\PCM\x64\Debug\main_window.obj
-E:\Codes\PCM\PCM\x64\Debug\moc_main_window.obj
-E:\Codes\PCM\PCM\x64\Debug\qrc_main_window.obj
-E:\Codes\PCM\PCM\x64\Debug\cl.command.1.tlog
-E:\Codes\PCM\PCM\x64\Debug\CL.read.1.tlog
-E:\Codes\PCM\PCM\x64\Debug\CL.write.1.tlog
-E:\Codes\PCM\PCM\x64\Debug\custombuild.command.1.tlog
-E:\Codes\PCM\PCM\x64\Debug\custombuild.read.1.tlog
-E:\Codes\PCM\PCM\x64\Debug\custombuild.write.1.tlog
-E:\Codes\PCM\PCM\x64\Debug\link.command.1.tlog
-E:\Codes\PCM\PCM\x64\Debug\link.read.1.tlog
-E:\Codes\PCM\PCM\x64\Debug\link.write.1.tlog
-E:\Codes\PCM\PCM\x64\Debug\vc110.pdb
+D:\CODES\POINTCLOUDMOTION\PCM\GENERATEDFILES\DEBUG\MOC_MAIN_WINDOW.CPP
+D:\CODES\POINTCLOUDMOTION\PCM\GENERATEDFILES\UI_MAIN_WINDOW.H
+D:\CODES\POINTCLOUDMOTION\PCM\GENERATEDFILES\DEBUG\MOC_DEFORMALEREGISTRATION.CPP
+D:\CODES\POINTCLOUDMOTION\PCM\GENERATEDFILES\DEBUG\MOC_PAINT_CANVAS.CPP
+D:\CODES\POINTCLOUDMOTION\PCM\GENERATEDFILES\DEBUG\MOC_SCANNER.CPP
+D:\CODES\POINTCLOUDMOTION\PCM\GENERATEDFILES\DEBUG\MOC_SPECTRAL_CLUSTERING.CPP
+D:\CODES\POINTCLOUDMOTION\PCM\GENERATEDFILES\DEBUG\MOC_TRAJ_CLUSTERING.CPP
+D:\CODES\POINTCLOUDMOTION\PCM\GENERATEDFILES\QRC_MAIN_WINDOW.CPP
+D:\CODES\POINTCLOUDMOTION\PCM\GENERATEDFILES\UI_DLG_CLUSTERING.H
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\console.obj
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\file_system.obj
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\main.obj
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\main_window.obj
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\moc_main_window.obj
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\qrc_main_window.obj
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\cl.command.1.tlog
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\CL.read.1.tlog
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\CL.write.1.tlog
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\custombuild.command.1.tlog
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\custombuild.read.1.tlog
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\custombuild.write.1.tlog
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\link.command.1.tlog
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\link.read.1.tlog
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\link.write.1.tlog
+C:\Users\Danis Dong\Documents\GitHub\PointCloudMotion\PCM\x64\Debug\vc110.pdb

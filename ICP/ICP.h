@@ -107,12 +107,62 @@ namespace RigidMotionEstimator {
 		X = transformation.linear() * X;
         /// Re-apply mean
        // X.colwise() += X_mean;
-		X.colwise() += Y_mean;
+		X.colwise() += Y_mean; 
 
         Y.colwise() += Y_mean;
         /// Return transformation
         return transformation;
     }
+	/// @param Source (one 3D point per column)
+	/// @param Target (one 3D point per column)
+	/// @param Confidence weights
+	template <typename Derived1, typename Derived2>
+	Eigen::Affine3f point_w_point(Eigen::MatrixBase<Derived1>& X,
+		Eigen::MatrixBase<Derived2>& Y) {
+// 			/// Normalize weight vector
+// 			Eigen::VectorXf w_normalized = w/w.sum();
+			/// De-mean
+			Eigen::Vector3f X_mean, Y_mean;
+			for(int i=0; i<3; ++i) {
+				X_mean(i) = X.row(i).sum()/X.cols();
+				Y_mean(i) = Y.row(i).sum()/Y.cols();
+			}
+			X.colwise() -= X_mean;
+			Y.colwise() -= Y_mean;
+			/// Compute transformation
+			Eigen::Affine3f transformation;
+			Eigen::Matrix3f sigma = X * Y.transpose();
+			Eigen::JacobiSVD<Eigen::Matrix3f> svd(sigma, Eigen::ComputeFullU | Eigen::ComputeFullV);
+			if(svd.matrixU().determinant()*svd.matrixV().determinant() < 0.0) {
+				Eigen::Vector3f S = Eigen::Vector3f::Ones(); S(2) = -1.0;
+				transformation.linear().noalias() = svd.matrixV()*S.asDiagonal()*svd.matrixU().transpose();
+			} else {
+				transformation.linear().noalias() = svd.matrixV()*svd.matrixU().transpose();
+			}
+			transformation.translation().noalias() = Y_mean - transformation.linear()*X_mean;
+
+
+
+// 			ScalarType scl = 1.0;
+// 			ScalarType molecule = X.colwise().squaredNorm().sum();
+// 			ScalarType denominator = Y.colwise().squaredNorm().sum();
+// 			assert( denominator > 1e-6);
+// 			scl = sqrt(molecule/denominator);
+
+			// Apply  w * rotate only
+
+			X = /*(scl) **/transformation.linear() * X;
+
+			/// Re-apply mean
+			// X.colwise() += X_mean;
+			X.colwise() += Y_mean; 
+
+			Y.colwise() += Y_mean;
+			/// Return transformation
+			return transformation;
+	}
+
+
     /// @param Source (one 3D point per column)
     /// @param Target (one 3D point per column)
     template <typename Derived1, typename Derived2>
@@ -224,6 +274,20 @@ namespace SICP {
         int max_outer;    /// max outer iteration
         int max_inner;    /// max inner iteration. If max_inner=1 then ADMM else ALM
         float stop;      /// stopping criteria
+	public:
+		Parameters::Parameters(bool use_penalty_,float p_,float mu_,float alpha_,float max_mu_,
+			int max_icp_,int max_outer_,int max_inner_,float stop_ )
+		{
+			use_penalty = use_penalty_;
+			p = p_;
+			mu = mu_;
+			alpha = alpha_;
+			max_mu = max_mu_; 
+			max_icp = max_icp_;
+			max_outer = max_outer_;
+			max_inner = max_inner_;
+			stop = stop_;
+		}
     };
     /// Shrinkage operator (Automatic loop unrolling using template)
     template<unsigned int I>
@@ -315,6 +379,67 @@ namespace SICP {
             if(stop < par.stop) break;
         }
     }
+
+
+//
+	/// Sparse ICP with point to point
+	/// @param Source (one 3D point per column)
+	/// @param Target (one 3D point per column)
+	/// @param Parameters
+	template <typename Derived1, typename Derived2,typename Derived3>
+	void point_w_point(Eigen::MatrixBase<Derived1>& X,
+		Eigen::MatrixBase<Derived2>& Y,
+		Eigen::MatrixBase<Derived3>& vtx_map,
+		Parameters par = Parameters()) {
+			/// Build kd-tree
+			nanoflann::KDTreeAdaptor<Eigen::MatrixBase<Derived2>, 3, nanoflann::metric_L2_Simple> kdtree(Y);
+			/// Buffers
+			Eigen::Matrix3Xf Q = Eigen::Matrix3Xf::Zero(3, X.cols());
+			Eigen::Matrix3Xf Z = Eigen::Matrix3Xf::Zero(3, X.cols());
+			Eigen::Matrix3Xf C = Eigen::Matrix3Xf::Zero(3, X.cols());
+			Eigen::Matrix3Xf Xo1 = X;
+			Eigen::Matrix3Xf Xo2 = X;
+			/// ICP
+			for(int icp=0; icp<par.max_icp; ++icp) {
+				/// Find closest point
+#pragma omp parallel for
+				for(int i=0; i<X.cols(); ++i) {
+					unsigned int mp = kdtree.closest(X.col(i).data());
+					Q.col(i) = Y.col(mp/*kdtree.closest(X.col(i).data())*/);
+					vtx_map(0,i) = mp;
+				}
+				/// Computer rotation and translation
+				float mu = par.mu;
+				for(int outer=0; outer<par.max_outer; ++outer) {
+					float dual = 0.0;
+					for(int inner=0; inner<par.max_inner; ++inner) {
+						/// Z update (shrinkage)
+						Z = X-Q+C/mu;
+						shrink<3>(Z, mu, par.p);
+						/// Rotation and translation update
+						Eigen::Matrix3Xf U = Q+Z-C/mu;
+						RigidMotionEstimator::point_w_point(X, U);
+						/// Stopping criteria
+						dual = (X-Xo1).colwise().norm().maxCoeff();
+						Xo1 = X;
+						if(dual < par.stop) break;
+					}
+					/// C update (lagrange multipliers)
+					Eigen::Matrix3Xf P = X-Q-Z;
+					if(!par.use_penalty) C.noalias() += mu*P;
+					/// mu update (penalty)
+					if(mu < par.max_mu) mu *= par.alpha;
+					/// Stopping criteria
+					double primal = P.colwise().norm().maxCoeff();
+					if(primal < par.stop && dual < par.stop) break;
+				}
+				/// Stopping criteria
+				double stop = (X-Xo2).colwise().norm().maxCoeff();
+				Xo2 = X;
+				if(stop < par.stop) break;
+			}
+	}
+
     /// Sparse ICP with point to plane
     /// @param Source (one 3D point per column)
     /// @param Target (one 3D point per column)

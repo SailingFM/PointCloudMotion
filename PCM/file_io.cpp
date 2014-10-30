@@ -68,9 +68,9 @@ namespace FileIO
 			{
 				Vertex& v = set[s_idx][v_idx];
 
-				fprintf( out_file, "%f %f %f %f %f %f %f %f %f\n", v.x(), v.y(),v.z(),
+				fprintf( out_file, "%f %f %f %f %f %f %d %d %d\n", v.x(), v.y(),v.z(),
 								v.nx(), v.ny(),v.nz(),
-								v.r(), v.g(), v.b() );
+								(int)(v.r()*255.), (int)(v.g()*255.), (int)(v.b()*255.) );
 			}
 			fclose( out_file );
 		}

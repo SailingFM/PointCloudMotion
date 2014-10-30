@@ -38,6 +38,8 @@ public:
 		void doSpectralClustering();
 		void finishClustering();
 
+		void doTrajClustering();
+
 		void openScanner();
 		void closeScanner();
 
@@ -47,9 +49,13 @@ public:
 
 		void setSelectToolMode();
 		void setSceneToolMode();
+		void setNormalToolMode();
 
 		void showTracer();
 		void clearTracer();
+		
+		void showSelectedTrajectory();
+		void computeSampleNormal();
 
 private:
 		void createAction();
@@ -73,8 +79,8 @@ private:
 
 	//Samples Info
 	vector< pair<string,string> >		cur_import_files_attr_;
-	int			cur_select_sample_idx_;
-	int			last_select_sample_idx_;
+	IndexType			cur_select_sample_idx_;
+	IndexType			last_select_sample_idx_;
 
 	Tool*			single_operate_tool_;
 

@@ -44,6 +44,7 @@ void Sample::draw(ColorMode::ObjectColorMode, const Vec3& bias )
 	}
 	
 	glPointSize(Paint_Param::g_point_size);
+	glEnable(GL_POINT_SMOOTH);
 	glBegin(GL_POINTS);
 
 
@@ -72,13 +73,14 @@ void Sample::draw(ColorMode::VertexColorMode, const Vec3& bias)
 	}
 
 	glPointSize(Paint_Param::g_point_size);
+	glEnable(GL_POINT_SMOOTH);
 	glBegin(GL_POINTS);
 
 
 	Matrix44 mat = matrix_to_scene_coord();
 	for ( IndexType i = 0; i < vertices_.size(); i++ )
 	{
-		vertices_[i]->draw(mat);
+		vertices_[i]->draw(mat,bias);
 	}
 	glEnd();
 
@@ -86,10 +88,12 @@ void Sample::draw(ColorMode::VertexColorMode, const Vec3& bias)
 
 void Sample::draw(ColorMode::LabelColorMode, const Vec3& bias)
 {
+
 	if ( selected_ )
 	{
 		glDisable(GL_LIGHTING);
 		glPointSize(Paint_Param::g_point_size);
+		glEnable(GL_POINT_SMOOTH);
 		glBegin(GL_POINTS);
 
 		Matrix44 mat = matrix_to_scene_coord();
@@ -190,10 +194,27 @@ bool Sample::neighbours(const IndexType query_point_idx, const IndexType num_clo
 	return true;
 }
 
+bool Sample::neighbours(const IndexType query_point_idx, const IndexType num_closet,
+						IndexType* out_indices,ScalarType* out_distances)
+{
+	if (kd_tree_should_rebuild_)
+	{
+		return false;
+	}
+
+	ScalarType	qp[3] = {vertices_[query_point_idx]->x(), 
+		vertices_[query_point_idx]->y(), 
+		vertices_[query_point_idx]->z() };
+	kd_tree_->query( qp, num_closet, out_indices, out_distances);
+
+	return true;
+}
+
 void Sample::update()
 {
 	assert( vtx_matrix_.cols() == vertices_.size() );
 	IndexType v_idx = 0;
+	box_ = Box();
 	for ( vtx_iterator v_iter = begin();
 			v_iter != end(); v_iter++,v_idx++ )
 	{
@@ -201,6 +222,7 @@ void Sample::update()
 					vtx_matrix_(1, v_idx),
 					vtx_matrix_(2, v_idx));
 		(*v_iter)->set_position( p );
+		box_.expand( p );
 	}
 	kd_tree_should_rebuild_ = true;
 	build_kdtree();

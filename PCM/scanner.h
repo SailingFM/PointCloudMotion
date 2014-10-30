@@ -13,6 +13,7 @@ public:
 
 	void run() Q_DECL_OVERRIDE;
 	inline Sample* generate_point_cloud( const IndexType sample_idx );
+	void build_sample_normal( Sample& smp );
 
 private:
 	openni::Device		device_;
